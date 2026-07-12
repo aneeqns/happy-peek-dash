@@ -542,7 +542,7 @@ function Dashboard() {
         <h1 className="sr-only">Stock market dashboard</h1>
 
         {/* KPI row */}
-        <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Kpi
             icon={<Wallet className="h-4 w-4" />}
             label="Portfolio value"
