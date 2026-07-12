@@ -25,6 +25,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { InvestAssistant } from "@/components/InvestAssistant";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -496,6 +497,7 @@ function Dashboard() {
           Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
         </footer>
       </main>
+      <InvestAssistant />
     </div>
   );
 }
