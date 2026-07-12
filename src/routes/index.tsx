@@ -367,7 +367,6 @@ function Dashboard() {
     setQuery("");
   };
 
-  const [watchlist, setWatchlist] = useState(initialWatchlist);
 
   // Live-ish price ticks
   useEffect(() => {
