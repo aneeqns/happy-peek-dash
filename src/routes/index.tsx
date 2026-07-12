@@ -32,6 +32,9 @@ import {
   YAxis,
 } from "recharts";
 import { InvestAssistant } from "@/components/InvestAssistant";
+import { PortfolioInsights } from "@/components/PortfolioInsights";
+import { SmartAlerts } from "@/components/SmartAlerts";
+import { PremiumUpgrade } from "@/components/PremiumUpgrade";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
