@@ -1,24 +1,579 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Bell,
+  Briefcase,
+  Globe2,
+  LineChart as LineChartIcon,
+  Newspaper,
+  Search,
+  Settings,
+  Sparkles,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Dashboard,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+// ---------- Mock data ----------
+const portfolio = {
+  value: 184_320.42,
+  change: 2_431.18,
+  changePct: 1.34,
+  cash: 12_480.9,
+  buyingPower: 24_961.8,
+};
+
+const chartData = Array.from({ length: 60 }, (_, i) => {
+  const base = 170_000 + Math.sin(i / 4) * 3000 + i * 220;
+  const noise = Math.cos(i / 2.3) * 1500 + (Math.random() - 0.5) * 800;
+  return { t: i, v: Math.round(base + noise) };
+});
+
+const sectorData = [
+  { name: "Tech", pct: 3.2 },
+  { name: "Energy", pct: -1.4 },
+  { name: "Finance", pct: 0.8 },
+  { name: "Health", pct: 1.9 },
+  { name: "Consumer", pct: -0.6 },
+  { name: "Crypto", pct: 4.6 },
+];
+
+type Ticker = {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePct: number;
+  spark: number[];
+};
+
+const initialWatchlist: Ticker[] = [
+  { symbol: "NVDA", name: "NVIDIA Corp", price: 1284.32, change: 22.14, changePct: 1.75, spark: gen() },
+  { symbol: "AAPL", name: "Apple Inc", price: 232.11, change: -1.42, changePct: -0.61, spark: gen() },
+  { symbol: "TSLA", name: "Tesla Inc", price: 268.94, change: 8.21, changePct: 3.15, spark: gen() },
+  { symbol: "MSFT", name: "Microsoft", price: 442.5, change: 3.02, changePct: 0.69, spark: gen() },
+  { symbol: "AMZN", name: "Amazon", price: 198.77, change: -2.11, changePct: -1.05, spark: gen() },
+  { symbol: "GOOGL", name: "Alphabet", price: 178.24, change: 1.88, changePct: 1.07, spark: gen() },
+  { symbol: "META", name: "Meta Platforms", price: 512.9, change: 6.44, changePct: 1.27, spark: gen() },
+  { symbol: "BTC", name: "Bitcoin", price: 68_412, change: 1834, changePct: 2.75, spark: gen() },
+];
+
+function gen() {
+  let v = 100;
+  return Array.from({ length: 24 }, () => (v += (Math.random() - 0.45) * 4));
+}
+
+const indices = [
+  { name: "S&P 500", value: 5_812.44, pct: 0.62 },
+  { name: "NASDAQ", value: 18_942.11, pct: 1.14 },
+  { name: "DOW", value: 42_180.9, pct: -0.21 },
+  { name: "VIX", value: 14.82, pct: -3.4 },
+];
+
+const news = [
+  {
+    tag: "Fed",
+    time: "12m",
+    title: "Fed signals patient path on rates as inflation cools further",
+    source: "Reuters",
+    impact: "high",
+  },
+  {
+    tag: "Earnings",
+    time: "38m",
+    title: "NVIDIA beats on Q3 revenue, data-center growth accelerates 94% YoY",
+    source: "Bloomberg",
+    impact: "high",
+  },
+  {
+    tag: "Energy",
+    time: "1h",
+    title: "Oil slips below $72 as OPEC+ weighs extending voluntary cuts",
+    source: "WSJ",
+    impact: "med",
+  },
+  {
+    tag: "Crypto",
+    time: "2h",
+    title: "Bitcoin ETFs post record weekly inflows amid rate-cut optimism",
+    source: "CoinDesk",
+    impact: "med",
+  },
+  {
+    tag: "Geo",
+    time: "3h",
+    title: "EU antitrust probe into cloud pricing widens to include AI vendors",
+    source: "FT",
+    impact: "low",
+  },
+];
+
+const positions = [
+  { symbol: "NVDA", qty: 42, avg: 812.4, price: 1284.32 },
+  { symbol: "AAPL", qty: 120, avg: 178.2, price: 232.11 },
+  { symbol: "MSFT", qty: 55, avg: 388.1, price: 442.5 },
+  { symbol: "TSLA", qty: 30, avg: 244.9, price: 268.94 },
+];
+
+// ---------- Helpers ----------
+const fmt = (n: number, d = 2) =>
+  n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+function Dashboard() {
+  const [range, setRange] = useState<"1D" | "1W" | "1M" | "1Y" | "ALL">("1M");
+  const [watchlist, setWatchlist] = useState(initialWatchlist);
+
+  // Live-ish price ticks
+  useEffect(() => {
+    const id = setInterval(() => {
+      setWatchlist((w) =>
+        w.map((t) => {
+          const drift = (Math.random() - 0.5) * (t.price * 0.0015);
+          const price = Math.max(0.01, t.price + drift);
+          const change = t.change + drift;
+          const changePct = (change / (price - change)) * 100;
+          return {
+            ...t,
+            price,
+            change,
+            changePct,
+            spark: [...t.spark.slice(1), t.spark[t.spark.length - 1] + drift],
+          };
+        }),
+      );
+    }, 1600);
+    return () => clearInterval(id);
+  }, []);
+
+  const gain = portfolio.change >= 0;
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Top bar */}
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
+        <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-2">
+            <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <span className="text-lg font-bold tracking-tight">Tickr</span>
+          </div>
+
+          <nav className="ml-6 hidden items-center gap-1 md:flex">
+            {["Dashboard", "Markets", "Portfolio", "News", "Screener"].map((l, i) => (
+              <a
+                key={l}
+                href="#"
+                className={`rounded-md px-3 py-1.5 text-sm ${
+                  i === 0
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {l}
+              </a>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <div className="relative hidden sm:block">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                placeholder="Search tickers, news…"
+                className="h-9 w-64 rounded-md border border-border bg-surface pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/60"
+              />
+            </div>
+            <button className="grid h-9 w-9 place-items-center rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground">
+              <Bell className="h-4 w-4" />
+            </button>
+            <button className="grid h-9 w-9 place-items-center rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground">
+              <Settings className="h-4 w-4" />
+            </button>
+            <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-sm font-semibold text-primary-foreground">
+              JR
+            </div>
+          </div>
+        </div>
+
+        {/* Index ticker strip */}
+        <div className="border-t border-border/60 bg-surface/50">
+          <div className="mx-auto flex max-w-[1400px] gap-6 overflow-x-auto px-4 py-2 sm:px-6">
+            {indices.map((idx) => (
+              <div key={idx.name} className="flex shrink-0 items-center gap-2 text-xs">
+                <span className="font-semibold uppercase tracking-wide text-muted-foreground">
+                  {idx.name}
+                </span>
+                <span className="font-mono-nums">{fmt(idx.value)}</span>
+                <span
+                  className={`font-mono-nums ${idx.pct >= 0 ? "text-bull" : "text-bear"}`}
+                >
+                  {idx.pct >= 0 ? "+" : ""}
+                  {idx.pct.toFixed(2)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
+        <h1 className="sr-only">Stock market dashboard</h1>
+
+        {/* KPI row */}
+        <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <Kpi
+            icon={<Wallet className="h-4 w-4" />}
+            label="Portfolio value"
+            value={`$${fmt(portfolio.value)}`}
+            delta={`${gain ? "+" : ""}$${fmt(portfolio.change)} (${portfolio.changePct.toFixed(2)}%)`}
+            up={gain}
+          />
+          <Kpi
+            icon={<Briefcase className="h-4 w-4" />}
+            label="Buying power"
+            value={`$${fmt(portfolio.buyingPower)}`}
+            delta={`Cash $${fmt(portfolio.cash)}`}
+          />
+          <Kpi
+            icon={<LineChartIcon className="h-4 w-4" />}
+            label="Today's P/L"
+            value={`+$${fmt(1284.9)}`}
+            delta="+0.71%"
+            up
+          />
+          <Kpi
+            icon={<Sparkles className="h-4 w-4" />}
+            label="Win rate (30d)"
+            value="62.4%"
+            delta="+3.1 pts"
+            up
+          />
+        </section>
+
+        {/* Chart + Watchlist */}
+        <section className="mt-6 grid gap-4 lg:grid-cols-3">
+          <div className="rounded-2xl border border-border bg-[image:var(--gradient-surface)] p-5 shadow-[var(--shadow-card)] lg:col-span-2">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                  Portfolio performance
+                </p>
+                <p className="mt-1 font-mono-nums text-3xl font-semibold">
+                  ${fmt(portfolio.value)}
+                </p>
+                <p
+                  className={`mt-1 flex items-center gap-1 text-sm font-mono-nums ${
+                    gain ? "text-bull" : "text-bear"
+                  }`}
+                >
+                  {gain ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                  {gain ? "+" : ""}${fmt(portfolio.change)} ({portfolio.changePct.toFixed(2)}%)
+                  <span className="ml-1 text-muted-foreground">this month</span>
+                </p>
+              </div>
+              <div className="flex rounded-lg border border-border bg-surface p-1">
+                {(["1D", "1W", "1M", "1Y", "ALL"] as const).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setRange(r)}
+                    className={`rounded-md px-3 py-1 text-xs font-medium ${
+                      range === r
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 h-[280px] w-full">
+              <ResponsiveContainer>
+                <AreaChart data={chartData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="pfill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="oklch(0.78 0.17 155)" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="oklch(0.78 0.17 155)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="oklch(0.3 0.03 265)" strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="t" hide />
+                  <YAxis
+                    domain={["dataMin - 500", "dataMax + 500"]}
+                    tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={60}
+                    tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "oklch(0.2 0.02 265)",
+                      border: "1px solid oklch(0.3 0.03 265)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                    labelFormatter={() => ""}
+                    formatter={(v: number) => [`$${fmt(v, 0)}`, "Value"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="v"
+                    stroke="oklch(0.78 0.17 155)"
+                    strokeWidth={2}
+                    fill="url(#pfill)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Watchlist */}
+          <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold">Watchlist</h2>
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-bull">
+                Live
+              </span>
+            </div>
+            <ul className="mt-3 divide-y divide-border/70">
+              {watchlist.map((t) => (
+                <WatchRow key={t.symbol} t={t} />
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Sector + News + Positions */}
+        <section className="mt-6 grid gap-4 lg:grid-cols-3">
+          <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold">Sector performance</h2>
+              <span className="text-xs text-muted-foreground">Today</span>
+            </div>
+            <div className="mt-3 h-[240px]">
+              <ResponsiveContainer>
+                <BarChart data={sectorData}>
+                  <CartesianGrid stroke="oklch(0.3 0.03 265)" strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "oklch(0.2 0.02 265)",
+                      border: "1px solid oklch(0.3 0.03 265)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                    cursor={{ fill: "oklch(0.28 0.03 265 / 0.4)" }}
+                  />
+                  <Bar dataKey="pct" radius={[6, 6, 0, 0]}>
+                    {sectorData.map((s, i) => (
+                      <rect key={i} fill={s.pct >= 0 ? "oklch(0.78 0.17 155)" : "oklch(0.68 0.22 25)"} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Current affairs / news */}
+          <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)] lg:col-span-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Newspaper className="h-4 w-4 text-muted-foreground" />
+                <h2 className="text-sm font-semibold">Market-moving current affairs</h2>
+              </div>
+              <a href="#" className="text-xs text-muted-foreground hover:text-foreground">
+                View all →
+              </a>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {news.map((n, i) => (
+                <li
+                  key={i}
+                  className="group flex items-start gap-3 rounded-xl border border-transparent p-3 hover:border-border hover:bg-surface-elevated"
+                >
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-secondary text-muted-foreground">
+                    <Globe2 className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <span className="rounded bg-accent/15 px-1.5 py-0.5 font-semibold text-accent">
+                        {n.tag}
+                      </span>
+                      <span>{n.source}</span>
+                      <span>· {n.time}</span>
+                      <span
+                        className={`ml-auto rounded px-1.5 py-0.5 font-semibold ${
+                          n.impact === "high"
+                            ? "bg-bear/15 text-bear"
+                            : n.impact === "med"
+                              ? "bg-primary/15 text-bull"
+                              : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {n.impact} impact
+                      </span>
+                    </div>
+                    <p className="mt-1 truncate text-sm font-medium text-foreground group-hover:text-primary">
+                      {n.title}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Positions */}
+        <section className="mt-6 rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold">Open positions</h2>
+            <span className="text-xs text-muted-foreground">{positions.length} holdings</span>
+          </div>
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <th className="py-2 font-medium">Symbol</th>
+                  <th className="py-2 font-medium">Qty</th>
+                  <th className="py-2 font-medium">Avg cost</th>
+                  <th className="py-2 font-medium">Price</th>
+                  <th className="py-2 font-medium">Market value</th>
+                  <th className="py-2 text-right font-medium">P/L</th>
+                </tr>
+              </thead>
+              <tbody className="font-mono-nums">
+                {positions.map((p) => {
+                  const mv = p.qty * p.price;
+                  const pl = (p.price - p.avg) * p.qty;
+                  const plPct = ((p.price - p.avg) / p.avg) * 100;
+                  const up = pl >= 0;
+                  return (
+                    <tr key={p.symbol} className="border-t border-border/60">
+                      <td className="py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="grid h-7 w-7 place-items-center rounded-md bg-secondary text-[10px] font-bold text-foreground">
+                            {p.symbol.slice(0, 2)}
+                          </div>
+                          <span className="font-semibold">{p.symbol}</span>
+                        </div>
+                      </td>
+                      <td>{p.qty}</td>
+                      <td>${fmt(p.avg)}</td>
+                      <td>${fmt(p.price)}</td>
+                      <td>${fmt(mv)}</td>
+                      <td className={`text-right ${up ? "text-bull" : "text-bear"}`}>
+                        {up ? "+" : ""}${fmt(pl)} ({up ? "+" : ""}
+                        {plPct.toFixed(2)}%)
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <footer className="mt-8 pb-4 text-center text-xs text-muted-foreground">
+          Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
+        </footer>
+      </main>
     </div>
+  );
+}
+
+function Kpi({
+  icon,
+  label,
+  value,
+  delta,
+  up,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  delta: string;
+  up?: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-4 shadow-[var(--shadow-card)]">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span className="grid h-6 w-6 place-items-center rounded-md bg-secondary text-foreground">
+          {icon}
+        </span>
+        <span className="uppercase tracking-wider">{label}</span>
+      </div>
+      <p className="mt-2 font-mono-nums text-xl font-semibold sm:text-2xl">{value}</p>
+      <p
+        className={`mt-1 text-xs font-mono-nums ${
+          up === undefined ? "text-muted-foreground" : up ? "text-bull" : "text-bear"
+        }`}
+      >
+        {delta}
+      </p>
+    </div>
+  );
+}
+
+function WatchRow({ t }: { t: Ticker }) {
+  const up = t.change >= 0;
+  const points = useMemo(() => {
+    const min = Math.min(...t.spark);
+    const max = Math.max(...t.spark);
+    const span = max - min || 1;
+    return t.spark
+      .map((v, i) => {
+        const x = (i / (t.spark.length - 1)) * 60;
+        const y = 22 - ((v - min) / span) * 20;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(" ");
+  }, [t.spark]);
+
+  return (
+    <li className="flex items-center gap-3 py-2.5">
+      <div className="grid h-8 w-8 place-items-center rounded-md bg-secondary text-[10px] font-bold">
+        {t.symbol.slice(0, 2)}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold">{t.symbol}</p>
+        <p className="truncate text-[11px] text-muted-foreground">{t.name}</p>
+      </div>
+      <svg viewBox="0 0 60 24" className="h-6 w-16 shrink-0">
+        <polyline
+          fill="none"
+          stroke={up ? "oklch(0.78 0.17 155)" : "oklch(0.68 0.22 25)"}
+          strokeWidth="1.5"
+          points={points}
+        />
+      </svg>
+      <div className="w-24 shrink-0 text-right font-mono-nums">
+        <p className="text-sm font-semibold">
+          ${t.price < 10 ? t.price.toFixed(4) : fmt(t.price)}
+        </p>
+        <p className={`text-[11px] ${up ? "text-bull" : "text-bear"}`}>
+          {up ? "+" : ""}
+          {t.changePct.toFixed(2)}%
+        </p>
+      </div>
+    </li>
   );
 }
