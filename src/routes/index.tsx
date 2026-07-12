@@ -32,6 +32,9 @@ import {
   YAxis,
 } from "recharts";
 import { InvestAssistant } from "@/components/InvestAssistant";
+import { PortfolioInsights } from "@/components/PortfolioInsights";
+import { SmartAlerts } from "@/components/SmartAlerts";
+import { PremiumUpgrade } from "@/components/PremiumUpgrade";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -405,17 +408,20 @@ function Dashboard() {
           </div>
 
           <nav className="ml-6 hidden items-center gap-1 md:flex">
-            {["Dashboard", "Markets", "Portfolio", "News", "Screener"].map((l, i) => (
+            {[
+              { label: "Dashboard", href: "#dashboard" },
+              { label: "Portfolio", href: "#portfolio" },
+              { label: "Insights", href: "#insights" },
+              { label: "Alerts", href: "#alerts" },
+              { label: "Goals", href: "#goals" },
+              { label: "Premium", href: "#premium" },
+            ].map((l) => (
               <a
-                key={l}
-                href="#"
-                className={`rounded-md px-3 py-1.5 text-sm ${
-                  i === 0
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                key={l.label}
+                href={l.href}
+                className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
               >
-                {l}
+                {l.label}
               </a>
             ))}
           </nav>
@@ -536,7 +542,7 @@ function Dashboard() {
         <h1 className="sr-only">Stock market dashboard</h1>
 
         {/* KPI row */}
-        <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Kpi
             icon={<Wallet className="h-4 w-4" />}
             label="Portfolio value"
@@ -743,7 +749,7 @@ function Dashboard() {
         </section>
 
         {/* Positions */}
-        <section className="mt-6 rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Open positions</h2>
             <span className="text-xs text-muted-foreground">{positions.length} holdings</span>
@@ -792,8 +798,12 @@ function Dashboard() {
           </div>
         </section>
 
+        <PortfolioInsights positions={positions} />
+
+        <SmartAlerts />
+
         {/* Goal-based investing */}
-        <section className="mt-6">
+        <section id="goals" className="mt-6 scroll-mt-24">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -908,6 +918,7 @@ function Dashboard() {
           </div>
         </section>
 
+        <PremiumUpgrade />
 
         <footer className="mt-8 pb-4 text-center text-xs text-muted-foreground">
           Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
