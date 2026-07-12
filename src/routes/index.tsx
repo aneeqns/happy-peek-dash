@@ -408,17 +408,20 @@ function Dashboard() {
           </div>
 
           <nav className="ml-6 hidden items-center gap-1 md:flex">
-            {["Dashboard", "Markets", "Portfolio", "News", "Screener"].map((l, i) => (
+            {[
+              { label: "Dashboard", href: "#dashboard" },
+              { label: "Portfolio", href: "#portfolio" },
+              { label: "Insights", href: "#insights" },
+              { label: "Alerts", href: "#alerts" },
+              { label: "Goals", href: "#goals" },
+              { label: "Premium", href: "#premium" },
+            ].map((l) => (
               <a
-                key={l}
-                href="#"
-                className={`rounded-md px-3 py-1.5 text-sm ${
-                  i === 0
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                key={l.label}
+                href={l.href}
+                className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
               >
-                {l}
+                {l.label}
               </a>
             ))}
           </nav>
