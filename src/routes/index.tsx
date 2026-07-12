@@ -798,8 +798,12 @@ function Dashboard() {
           </div>
         </section>
 
+        <PortfolioInsights positions={positions} />
+
+        <SmartAlerts />
+
         {/* Goal-based investing */}
-        <section className="mt-6">
+        <section id="goals" className="mt-6 scroll-mt-24">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
