@@ -497,6 +497,7 @@ function Dashboard() {
           Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
         </footer>
       </main>
+      <InvestAssistant />
     </div>
   );
 }
