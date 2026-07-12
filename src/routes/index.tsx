@@ -93,6 +93,79 @@ const indices = [
   { name: "VIX", value: 14.82, pct: -3.4 },
 ];
 
+// Global market universe — searchable via the header search bar.
+type MarketKind = "Stock" | "ETF" | "Index" | "Crypto" | "FX" | "Commodity";
+type MarketItem = {
+  symbol: string;
+  name: string;
+  kind: MarketKind;
+  region: string;
+  price: number;
+  pct: number;
+};
+
+const marketUniverse: MarketItem[] = [
+  // US Mega-cap stocks
+  { symbol: "NVDA", name: "NVIDIA Corp", kind: "Stock", region: "US", price: 1284.32, pct: 1.75 },
+  { symbol: "AAPL", name: "Apple Inc", kind: "Stock", region: "US", price: 232.11, pct: -0.61 },
+  { symbol: "MSFT", name: "Microsoft", kind: "Stock", region: "US", price: 442.5, pct: 0.69 },
+  { symbol: "GOOGL", name: "Alphabet Class A", kind: "Stock", region: "US", price: 178.24, pct: 1.07 },
+  { symbol: "AMZN", name: "Amazon.com", kind: "Stock", region: "US", price: 198.77, pct: -1.05 },
+  { symbol: "META", name: "Meta Platforms", kind: "Stock", region: "US", price: 512.9, pct: 1.27 },
+  { symbol: "TSLA", name: "Tesla Inc", kind: "Stock", region: "US", price: 268.94, pct: 3.15 },
+  { symbol: "AVGO", name: "Broadcom Inc", kind: "Stock", region: "US", price: 1642.1, pct: 2.1 },
+  { symbol: "JPM", name: "JPMorgan Chase", kind: "Stock", region: "US", price: 218.44, pct: 0.42 },
+  { symbol: "V", name: "Visa Inc", kind: "Stock", region: "US", price: 289.6, pct: 0.31 },
+  { symbol: "UNH", name: "UnitedHealth Group", kind: "Stock", region: "US", price: 552.4, pct: -0.85 },
+  { symbol: "XOM", name: "Exxon Mobil", kind: "Stock", region: "US", price: 118.9, pct: -1.4 },
+  { symbol: "BRK.B", name: "Berkshire Hathaway B", kind: "Stock", region: "US", price: 462.05, pct: 0.22 },
+  { symbol: "LLY", name: "Eli Lilly", kind: "Stock", region: "US", price: 892.1, pct: 1.9 },
+  { symbol: "AMD", name: "Advanced Micro Devices", kind: "Stock", region: "US", price: 168.72, pct: 2.4 },
+  { symbol: "NFLX", name: "Netflix", kind: "Stock", region: "US", price: 712.8, pct: 0.55 },
+  { symbol: "DIS", name: "Walt Disney", kind: "Stock", region: "US", price: 98.14, pct: -0.7 },
+  { symbol: "BA", name: "Boeing", kind: "Stock", region: "US", price: 168.5, pct: -1.1 },
+  // ETFs
+  { symbol: "SPY", name: "SPDR S&P 500 ETF", kind: "ETF", region: "US", price: 578.42, pct: 0.62 },
+  { symbol: "QQQ", name: "Invesco QQQ Trust", kind: "ETF", region: "US", price: 490.11, pct: 1.14 },
+  { symbol: "VTI", name: "Vanguard Total Market", kind: "ETF", region: "US", price: 288.32, pct: 0.55 },
+  { symbol: "VXUS", name: "Vanguard Total Intl Stock", kind: "ETF", region: "Global", price: 63.4, pct: 0.3 },
+  { symbol: "SCHD", name: "Schwab US Dividend Equity", kind: "ETF", region: "US", price: 82.6, pct: 0.18 },
+  { symbol: "BND", name: "Vanguard Total Bond", kind: "ETF", region: "US", price: 73.1, pct: -0.1 },
+  { symbol: "SGOV", name: "iShares 0-3M Treasury", kind: "ETF", region: "US", price: 100.42, pct: 0.01 },
+  { symbol: "VOO", name: "Vanguard S&P 500", kind: "ETF", region: "US", price: 531.02, pct: 0.61 },
+  { symbol: "GLD", name: "SPDR Gold Shares", kind: "ETF", region: "Global", price: 242.9, pct: 0.9 },
+  { symbol: "EEM", name: "iShares MSCI Emerging Mkts", kind: "ETF", region: "EM", price: 44.2, pct: 0.4 },
+  // Indices
+  { symbol: "SPX", name: "S&P 500 Index", kind: "Index", region: "US", price: 5_812.44, pct: 0.62 },
+  { symbol: "IXIC", name: "NASDAQ Composite", kind: "Index", region: "US", price: 18_942.11, pct: 1.14 },
+  { symbol: "DJI", name: "Dow Jones Industrial Avg", kind: "Index", region: "US", price: 42_180.9, pct: -0.21 },
+  { symbol: "VIX", name: "CBOE Volatility Index", kind: "Index", region: "US", price: 14.82, pct: -3.4 },
+  { symbol: "FTSE", name: "FTSE 100", kind: "Index", region: "UK", price: 8_244.1, pct: 0.35 },
+  { symbol: "N225", name: "Nikkei 225", kind: "Index", region: "JP", price: 39_120.5, pct: 0.82 },
+  { symbol: "HSI", name: "Hang Seng Index", kind: "Index", region: "HK", price: 20_412.2, pct: -0.4 },
+  { symbol: "DAX", name: "DAX Performance Index", kind: "Index", region: "DE", price: 19_320.8, pct: 0.5 },
+  { symbol: "NIFTY", name: "NIFTY 50", kind: "Index", region: "IN", price: 24_680.3, pct: 0.28 },
+  // Crypto
+  { symbol: "BTC", name: "Bitcoin", kind: "Crypto", region: "Global", price: 68_412, pct: 2.75 },
+  { symbol: "ETH", name: "Ethereum", kind: "Crypto", region: "Global", price: 3_842.1, pct: 3.1 },
+  { symbol: "SOL", name: "Solana", kind: "Crypto", region: "Global", price: 172.4, pct: 4.8 },
+  { symbol: "BNB", name: "BNB", kind: "Crypto", region: "Global", price: 612.2, pct: 1.2 },
+  { symbol: "XRP", name: "Ripple", kind: "Crypto", region: "Global", price: 0.612, pct: -0.9 },
+  { symbol: "DOGE", name: "Dogecoin", kind: "Crypto", region: "Global", price: 0.148, pct: 2.3 },
+  { symbol: "ADA", name: "Cardano", kind: "Crypto", region: "Global", price: 0.412, pct: -1.4 },
+  // FX
+  { symbol: "EURUSD", name: "Euro / US Dollar", kind: "FX", region: "FX", price: 1.0842, pct: 0.12 },
+  { symbol: "GBPUSD", name: "British Pound / USD", kind: "FX", region: "FX", price: 1.2712, pct: -0.08 },
+  { symbol: "USDJPY", name: "US Dollar / Yen", kind: "FX", region: "FX", price: 151.32, pct: 0.24 },
+  { symbol: "USDINR", name: "US Dollar / Rupee", kind: "FX", region: "FX", price: 83.94, pct: 0.05 },
+  // Commodities
+  { symbol: "CL", name: "Crude Oil (WTI)", kind: "Commodity", region: "Global", price: 71.82, pct: -1.2 },
+  { symbol: "GC", name: "Gold Futures", kind: "Commodity", region: "Global", price: 2_642.1, pct: 0.9 },
+  { symbol: "SI", name: "Silver Futures", kind: "Commodity", region: "Global", price: 31.4, pct: 1.4 },
+  { symbol: "NG", name: "Natural Gas", kind: "Commodity", region: "Global", price: 2.94, pct: -2.1 },
+];
+
+
 const news = [
   {
     tag: "Fed",
