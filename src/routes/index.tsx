@@ -918,6 +918,7 @@ function Dashboard() {
           </div>
         </section>
 
+        <PremiumUpgrade />
 
         <footer className="mt-8 pb-4 text-center text-xs text-muted-foreground">
           Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
