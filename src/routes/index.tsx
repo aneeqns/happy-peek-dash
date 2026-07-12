@@ -25,6 +25,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { InvestAssistant } from "@/components/InvestAssistant";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
