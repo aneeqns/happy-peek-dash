@@ -320,6 +320,54 @@ const fmt = (n: number, d = 2) =>
 function Dashboard() {
   const [range, setRange] = useState<"1D" | "1W" | "1M" | "1Y" | "ALL">("1M");
   const [watchlist, setWatchlist] = useState(initialWatchlist);
+  const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+
+  const searchResults = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return marketUniverse.slice(0, 8);
+    return marketUniverse
+      .filter(
+        (m) =>
+          m.symbol.toLowerCase().includes(q) ||
+          m.name.toLowerCase().includes(q) ||
+          m.kind.toLowerCase().includes(q) ||
+          m.region.toLowerCase().includes(q),
+      )
+      .slice(0, 12);
+  }, [query]);
+
+  const addToWatchlist = (m: MarketItem) => {
+    setWatchlist((w) => {
+      if (w.some((t) => t.symbol === m.symbol)) return w;
+      return [
+        {
+          symbol: m.symbol,
+          name: m.name,
+          price: m.price,
+          change: (m.price * m.pct) / 100,
+          changePct: m.pct,
+          spark: gen(),
+        },
+        ...w,
+      ];
+    });
+    setSearchOpen(false);
+    setQuery("");
+  };
+
+  const [watchlist, setWatchlist] = useState(initialWatchlist);
 
   // Live-ish price ticks
   useEffect(() => {
