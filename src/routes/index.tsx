@@ -138,6 +138,108 @@ const positions = [
   { symbol: "TSLA", qty: 30, avg: 244.9, price: 268.94 },
 ];
 
+type Goal = {
+  id: string;
+  icon: React.ReactNode;
+  name: string;
+  horizon: string;
+  target: number;
+  saved: number;
+  monthly: number;
+  risk: "Low" | "Medium" | "High";
+  allocation: { label: string; pct: number; color: string }[];
+  suggestions: string[];
+  thesis: string;
+};
+
+const goals: Goal[] = [
+  {
+    id: "retire",
+    icon: <Umbrella className="h-4 w-4" />,
+    name: "Retirement",
+    horizon: "25 yrs",
+    target: 1_200_000,
+    saved: 184_320,
+    monthly: 1_500,
+    risk: "High",
+    allocation: [
+      { label: "Equities", pct: 75, color: "oklch(0.78 0.17 155)" },
+      { label: "Bonds", pct: 15, color: "oklch(0.65 0.18 260)" },
+      { label: "Alts", pct: 10, color: "oklch(0.72 0.19 45)" },
+    ],
+    suggestions: ["VTI", "VXUS", "QQQ", "SCHD"],
+    thesis: "Long horizon → aggressive equity tilt with broad global diversification.",
+  },
+  {
+    id: "home",
+    icon: <Home className="h-4 w-4" />,
+    name: "House down payment",
+    horizon: "4 yrs",
+    target: 80_000,
+    saved: 32_400,
+    monthly: 900,
+    risk: "Low",
+    allocation: [
+      { label: "T-Bills", pct: 55, color: "oklch(0.72 0.19 45)" },
+      { label: "HYSA", pct: 30, color: "oklch(0.78 0.17 155)" },
+      { label: "Short bonds", pct: 15, color: "oklch(0.65 0.18 260)" },
+    ],
+    suggestions: ["SGOV", "BIL", "VMFXX"],
+    thesis: "Capital preservation — lock in ~5% yield without duration risk.",
+  },
+  {
+    id: "college",
+    icon: <GraduationCap className="h-4 w-4" />,
+    name: "Kid's college fund",
+    horizon: "12 yrs",
+    target: 150_000,
+    saved: 28_900,
+    monthly: 400,
+    risk: "Medium",
+    allocation: [
+      { label: "Equities", pct: 60, color: "oklch(0.78 0.17 155)" },
+      { label: "Bonds", pct: 30, color: "oklch(0.65 0.18 260)" },
+      { label: "Cash", pct: 10, color: "oklch(0.72 0.19 45)" },
+    ],
+    suggestions: ["VOO", "AGG", "VXUS"],
+    thesis: "Balanced 60/30/10 in a 529 — glidepath more conservative near year 10.",
+  },
+  {
+    id: "travel",
+    icon: <Plane className="h-4 w-4" />,
+    name: "World trip",
+    horizon: "18 mo",
+    target: 15_000,
+    saved: 4_200,
+    monthly: 600,
+    risk: "Low",
+    allocation: [
+      { label: "HYSA", pct: 70, color: "oklch(0.78 0.17 155)" },
+      { label: "T-Bills", pct: 30, color: "oklch(0.72 0.19 45)" },
+    ],
+    suggestions: ["SGOV", "HYSA"],
+    thesis: "Under 2 yrs — no equities. Prioritize liquidity and stable yield.",
+  },
+  {
+    id: "car",
+    icon: <Car className="h-4 w-4" />,
+    name: "New EV",
+    horizon: "3 yrs",
+    target: 45_000,
+    saved: 11_800,
+    monthly: 700,
+    risk: "Medium",
+    allocation: [
+      { label: "Bonds", pct: 50, color: "oklch(0.65 0.18 260)" },
+      { label: "Equities", pct: 30, color: "oklch(0.78 0.17 155)" },
+      { label: "Cash", pct: 20, color: "oklch(0.72 0.19 45)" },
+    ],
+    suggestions: ["BND", "VTI", "SGOV"],
+    thesis: "Moderate risk — bond-heavy blend to smooth volatility over 3 yrs.",
+  },
+];
+
+
 // ---------- Helpers ----------
 const fmt = (n: number, d = 2) =>
   n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
