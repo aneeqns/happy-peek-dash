@@ -606,6 +606,123 @@ function Dashboard() {
           </div>
         </section>
 
+        {/* Goal-based investing */}
+        <section className="mt-6">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Target className="h-4 w-4 text-accent" />
+                <h2 className="text-sm font-semibold">Goal-based investment ideas</h2>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Suggested allocations tuned to each goal's horizon and risk tolerance.
+              </p>
+            </div>
+            <button className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
+              + New goal
+            </button>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {goals.map((g) => {
+              const progress = Math.min(100, (g.saved / g.target) * 100);
+              return (
+                <div
+                  key={g.id}
+                  className="group flex flex-col rounded-2xl border border-border bg-[image:var(--gradient-surface)] p-5 shadow-[var(--shadow-card)] transition hover:border-primary/40"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="grid h-9 w-9 place-items-center rounded-lg bg-secondary text-foreground">
+                        {g.icon}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-tight">{g.name}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {g.horizon} · ${fmt(g.monthly, 0)}/mo
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                        g.risk === "High"
+                          ? "bg-bear/15 text-bear"
+                          : g.risk === "Medium"
+                            ? "bg-primary/15 text-bull"
+                            : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {g.risk} risk
+                    </span>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="flex items-baseline justify-between font-mono-nums">
+                      <span className="text-base font-semibold">${fmt(g.saved, 0)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        of ${fmt(g.target, 0)}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[11px] text-muted-foreground font-mono-nums">
+                      {progress.toFixed(1)}% funded
+                    </p>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Suggested allocation
+                    </p>
+                    <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full">
+                      {g.allocation.map((a) => (
+                        <div
+                          key={a.label}
+                          style={{ width: `${a.pct}%`, background: a.color }}
+                          title={`${a.label} ${a.pct}%`}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px]">
+                      {g.allocation.map((a) => (
+                        <span key={a.label} className="flex items-center gap-1 text-muted-foreground">
+                          <span
+                            className="h-2 w-2 rounded-sm"
+                            style={{ background: a.color }}
+                          />
+                          {a.label} <span className="font-mono-nums text-foreground">{a.pct}%</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-xs text-muted-foreground">{g.thesis}</p>
+
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {g.suggestions.map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-md border border-border bg-surface px-2 py-0.5 font-mono-nums text-[11px] font-semibold text-foreground"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+
+                  <button className="mt-4 w-full rounded-lg bg-primary py-2 text-xs font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:opacity-90">
+                    Invest toward this goal
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+
         <footer className="mt-8 pb-4 text-center text-xs text-muted-foreground">
           Mock data for demonstration. Prices update every ~1.6s to simulate a live feed.
         </footer>
