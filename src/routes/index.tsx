@@ -13,6 +13,12 @@ import {
   Sparkles,
   TrendingUp,
   Wallet,
+  Target,
+  GraduationCap,
+  Home,
+  Plane,
+  Umbrella,
+  Car,
 } from "lucide-react";
 import {
   Area,
