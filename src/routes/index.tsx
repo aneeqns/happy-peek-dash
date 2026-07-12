@@ -421,13 +421,79 @@ function Dashboard() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <div className="relative hidden sm:block">
+            <div ref={searchRef} className="relative hidden sm:block">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
-                placeholder="Search tickers, news…"
-                className="h-9 w-64 rounded-md border border-border bg-surface pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/60"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setSearchOpen(true);
+                }}
+                onFocus={() => setSearchOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setSearchOpen(false);
+                  if (e.key === "Enter" && searchResults[0]) addToWatchlist(searchResults[0]);
+                }}
+                placeholder="Search all markets — stocks, ETFs, crypto, FX…"
+                className="h-9 w-72 rounded-md border border-border bg-surface pl-8 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/60"
               />
+              {searchOpen && (
+                <div className="absolute right-0 top-11 z-40 w-[380px] overflow-hidden rounded-xl border border-border bg-surface-elevated shadow-[var(--shadow-card)]">
+                  <div className="flex items-center justify-between border-b border-border/60 px-3 py-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <span>{query ? `Results for "${query}"` : "Explore all markets"}</span>
+                    <span className="font-mono-nums">{searchResults.length}</span>
+                  </div>
+                  {searchResults.length === 0 ? (
+                    <div className="px-3 py-6 text-center text-sm text-muted-foreground">
+                      No markets match "{query}"
+                    </div>
+                  ) : (
+                    <ul className="max-h-[360px] overflow-y-auto">
+                      {searchResults.map((m) => {
+                        const up = m.pct >= 0;
+                        return (
+                          <li key={`${m.kind}-${m.symbol}`}>
+                            <button
+                              onClick={() => addToWatchlist(m)}
+                              className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-secondary/60"
+                            >
+                              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-secondary text-[10px] font-bold text-foreground">
+                                {m.symbol.slice(0, 2)}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="truncate text-sm font-semibold">{m.symbol}</span>
+                                  <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-accent">
+                                    {m.kind}
+                                  </span>
+                                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                                    {m.region}
+                                  </span>
+                                </div>
+                                <p className="truncate text-[11px] text-muted-foreground">{m.name}</p>
+                              </div>
+                              <div className="shrink-0 text-right font-mono-nums">
+                                <p className="text-sm font-semibold">
+                                  {m.price < 10 ? m.price.toFixed(4) : fmt(m.price)}
+                                </p>
+                                <p className={`text-[11px] ${up ? "text-bull" : "text-bear"}`}>
+                                  {up ? "+" : ""}
+                                  {m.pct.toFixed(2)}%
+                                </p>
+                              </div>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                  <div className="border-t border-border/60 px-3 py-2 text-[10px] text-muted-foreground">
+                    Enter to add top result · Esc to close
+                  </div>
+                </div>
+              )}
             </div>
+
             <button className="grid h-9 w-9 place-items-center rounded-md border border-border bg-surface text-muted-foreground hover:text-foreground">
               <Bell className="h-4 w-4" />
             </button>
