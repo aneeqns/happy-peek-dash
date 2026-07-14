@@ -402,10 +402,10 @@ function Dashboard() {
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-              <TrendingUp className="h-5 w-5" />
+            <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-lg bg-black shadow-[var(--shadow-glow)]">
+              <img src={uptrendLogo.url} alt="Uptrend logo" className="h-10 w-10 object-cover" />
             </div>
-            <span className="text-lg font-bold tracking-tight">Tickr</span>
+            <span className="text-lg font-bold tracking-tight">Uptrend</span>
           </div>
 
           <nav className="ml-6 hidden items-center gap-1 md:flex">
