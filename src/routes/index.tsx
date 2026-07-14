@@ -799,16 +799,16 @@ function Dashboard() {
           </div>
         </section>
 
-        <div className="mt-6 rounded-3xl border border-violet-500/20 bg-violet-500/5 p-4">
+        <div id="insights" className="mt-6 scroll-mt-24 rounded-3xl border border-violet-400/40 bg-gradient-to-br from-violet-500/25 via-fuchsia-500/15 to-purple-500/20 p-4 shadow-[0_0_40px_-10px_rgba(139,92,246,0.4)]">
           <PortfolioInsights positions={positions} />
         </div>
 
-        <div className="mt-6 rounded-3xl border border-teal-500/20 bg-teal-500/5 p-4">
+        <div id="alerts" className="mt-6 scroll-mt-24 rounded-3xl border border-teal-400/40 bg-gradient-to-br from-teal-500/25 via-emerald-500/15 to-cyan-500/20 p-4 shadow-[0_0_40px_-10px_rgba(20,184,166,0.4)]">
           <SmartAlerts />
         </div>
 
         {/* Goal-based investing */}
-        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-4">
+        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-400/40 bg-gradient-to-br from-rose-500/25 via-pink-500/15 to-fuchsia-500/20 p-4 shadow-[0_0_40px_-10px_rgba(244,63,94,0.4)]">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
