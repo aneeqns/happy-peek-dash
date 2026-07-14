@@ -11,7 +11,7 @@ import {
   Search,
   Settings,
   Sparkles,
-  TrendingUp,
+  
   Wallet,
   Target,
   GraduationCap,
