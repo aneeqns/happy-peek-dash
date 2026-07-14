@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 
-const SYSTEM_PROMPT = `You are Tickr AI, an investing research copilot inside a stock market dashboard.
+const SYSTEM_PROMPT = `You are Uptrend AI, an investing research copilot inside a stock market dashboard.
 
 You help the user think through what to invest in. Be concise, structured, and specific.
 
