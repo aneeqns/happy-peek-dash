@@ -804,7 +804,7 @@ function Dashboard() {
         <SmartAlerts />
 
         {/* Goal-based investing */}
-        <section id="goals" className="mt-6 scroll-mt-24">
+        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-4">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
