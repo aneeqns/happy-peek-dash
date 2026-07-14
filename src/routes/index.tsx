@@ -35,6 +35,7 @@ import { InvestAssistant } from "@/components/InvestAssistant";
 import { PortfolioInsights } from "@/components/PortfolioInsights";
 import { SmartAlerts } from "@/components/SmartAlerts";
 import { PremiumUpgrade } from "@/components/PremiumUpgrade";
+import uptrendLogo from "@/assets/uptrend-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
