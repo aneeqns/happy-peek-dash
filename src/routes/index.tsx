@@ -669,7 +669,7 @@ function Dashboard() {
         </section>
 
         {/* Sector + News + Positions */}
-        <section className="mt-6 grid gap-4 lg:grid-cols-3">
+        <section className="mt-6 grid gap-4 rounded-3xl border border-amber-500/20 bg-amber-500/5 p-4 lg:grid-cols-3">
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Sector performance</h2>
