@@ -12,7 +12,7 @@ type Alert = {
   lastTriggered?: number;
 };
 
-const STORAGE_KEY = "tickr.alerts.v1";
+const STORAGE_KEY = "uptrend.alerts.v1";
 
 const SEED: Alert[] = [
   { id: "s1", symbol: "NVDA", condition: "above", value: 1350, active: true, createdAt: Date.now() - 86400_000 * 2 },
