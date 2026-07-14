@@ -46,7 +46,7 @@ export function InvestAssistant() {
         className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:scale-[1.03]"
       >
         <Sparkles className="h-4 w-4" />
-        Ask Tickr AI
+        Ask Uptrend AI
       </button>
 
       {/* Drawer */}
