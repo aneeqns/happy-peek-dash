@@ -543,7 +543,7 @@ function Dashboard() {
         <h1 className="sr-only">Stock market dashboard</h1>
 
         {/* KPI row */}
-        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 rounded-3xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:grid-cols-4">
+        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 rounded-3xl border border-emerald-400/40 bg-gradient-to-br from-emerald-500/25 via-emerald-400/10 to-lime-500/15 p-4 shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)] sm:grid-cols-4">
           <Kpi
             icon={<Wallet className="h-4 w-4" />}
             label="Portfolio value"
@@ -574,7 +574,7 @@ function Dashboard() {
         </section>
 
         {/* Chart + Watchlist */}
-        <section className="mt-6 grid gap-4 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-4 lg:grid-cols-3">
+        <section className="mt-6 grid gap-4 rounded-3xl border border-indigo-400/40 bg-gradient-to-br from-indigo-500/25 via-blue-500/15 to-purple-500/20 p-4 shadow-[0_0_40px_-10px_rgba(99,102,241,0.4)] lg:grid-cols-3">
           <div className="rounded-2xl border border-border bg-[image:var(--gradient-surface)] p-5 shadow-[var(--shadow-card)] lg:col-span-2">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
@@ -669,7 +669,7 @@ function Dashboard() {
         </section>
 
         {/* Sector + News + Positions */}
-        <section className="mt-6 grid gap-4 rounded-3xl border border-amber-500/20 bg-amber-500/5 p-4 lg:grid-cols-3">
+        <section className="mt-6 grid gap-4 rounded-3xl border border-amber-400/40 bg-gradient-to-br from-amber-500/25 via-orange-500/15 to-yellow-500/20 p-4 shadow-[0_0_40px_-10px_rgba(245,158,11,0.4)] lg:grid-cols-3">
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Sector performance</h2>
@@ -750,7 +750,7 @@ function Dashboard() {
         </section>
 
         {/* Positions */}
-        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-cyan-500/25 bg-cyan-500/5 p-5 shadow-[var(--shadow-card)]">
+        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-cyan-400/40 bg-gradient-to-br from-cyan-500/25 via-sky-500/15 to-blue-500/20 p-5 shadow-[0_0_40px_-10px_rgba(6,182,212,0.4)]">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Open positions</h2>
             <span className="text-xs text-muted-foreground">{positions.length} holdings</span>
@@ -799,16 +799,16 @@ function Dashboard() {
           </div>
         </section>
 
-        <div className="mt-6 rounded-3xl border border-violet-500/20 bg-violet-500/5 p-4">
+        <div id="insights" className="mt-6 scroll-mt-24 rounded-3xl border border-violet-400/40 bg-gradient-to-br from-violet-500/25 via-fuchsia-500/15 to-purple-500/20 p-4 shadow-[0_0_40px_-10px_rgba(139,92,246,0.4)]">
           <PortfolioInsights positions={positions} />
         </div>
 
-        <div className="mt-6 rounded-3xl border border-teal-500/20 bg-teal-500/5 p-4">
+        <div id="alerts" className="mt-6 scroll-mt-24 rounded-3xl border border-teal-400/40 bg-gradient-to-br from-teal-500/25 via-emerald-500/15 to-cyan-500/20 p-4 shadow-[0_0_40px_-10px_rgba(20,184,166,0.4)]">
           <SmartAlerts />
         </div>
 
         {/* Goal-based investing */}
-        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-4">
+        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-400/40 bg-gradient-to-br from-rose-500/25 via-pink-500/15 to-fuchsia-500/20 p-4 shadow-[0_0_40px_-10px_rgba(244,63,94,0.4)]">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
