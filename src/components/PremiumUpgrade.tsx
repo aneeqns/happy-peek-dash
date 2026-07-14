@@ -2,7 +2,7 @@ import { Check, Crown, Sparkles } from "lucide-react";
 
 const FEATURES = [
   { title: "Premium analytics", desc: "Factor exposures, drawdown, Sharpe & Sortino on your book." },
-  { title: "AI investing assistant", desc: "Unlimited Tickr AI with live research, screening & thesis drafts." },
+  { title: "AI investing assistant", desc: "Unlimited Uptrend AI with live research, screening & thesis drafts." },
   { title: "Smart alerts++", desc: "Multi-condition rules, options flow, insider filings, earnings whispers." },
   { title: "Community picks", desc: "Follow top investors, share theses, copy watchlists." },
   { title: "Portfolio insights+", desc: "Backtests, benchmark blending, tax-lot P/L & optimization suggestions." },
