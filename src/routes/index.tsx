@@ -799,9 +799,13 @@ function Dashboard() {
           </div>
         </section>
 
-        <PortfolioInsights positions={positions} />
+        <div className="mt-6 rounded-3xl border border-violet-500/20 bg-violet-500/5 p-4">
+          <PortfolioInsights positions={positions} />
+        </div>
 
-        <SmartAlerts />
+        <div className="mt-6 rounded-3xl border border-teal-500/20 bg-teal-500/5 p-4">
+          <SmartAlerts />
+        </div>
 
         {/* Goal-based investing */}
         <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-4">
