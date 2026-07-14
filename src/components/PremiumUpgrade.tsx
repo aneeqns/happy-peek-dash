@@ -2,7 +2,7 @@ import { Check, Crown, Sparkles } from "lucide-react";
 
 const FEATURES = [
   { title: "Premium analytics", desc: "Factor exposures, drawdown, Sharpe & Sortino on your book." },
-  { title: "AI investing assistant", desc: "Unlimited Tickr AI with live research, screening & thesis drafts." },
+  { title: "AI investing assistant", desc: "Unlimited Uptrend AI with live research, screening & thesis drafts." },
   { title: "Smart alerts++", desc: "Multi-condition rules, options flow, insider filings, earnings whispers." },
   { title: "Community picks", desc: "Follow top investors, share theses, copy watchlists." },
   { title: "Portfolio insights+", desc: "Backtests, benchmark blending, tax-lot P/L & optimization suggestions." },
@@ -25,7 +25,7 @@ export function PremiumUpgrade() {
         <div className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-accent">
-              <Crown className="h-3.5 w-3.5" /> Tickr Premium
+              <Crown className="h-3.5 w-3.5" /> Uptrend Premium
             </div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
               Trade with an edge, not on vibes.

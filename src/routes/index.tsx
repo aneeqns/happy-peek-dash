@@ -11,7 +11,7 @@ import {
   Search,
   Settings,
   Sparkles,
-  TrendingUp,
+  
   Wallet,
   Target,
   GraduationCap,
@@ -35,6 +35,7 @@ import { InvestAssistant } from "@/components/InvestAssistant";
 import { PortfolioInsights } from "@/components/PortfolioInsights";
 import { SmartAlerts } from "@/components/SmartAlerts";
 import { PremiumUpgrade } from "@/components/PremiumUpgrade";
+import uptrendLogo from "@/assets/uptrend-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -401,10 +402,10 @@ function Dashboard() {
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-              <TrendingUp className="h-5 w-5" />
+            <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-lg bg-black shadow-[var(--shadow-glow)]">
+              <img src={uptrendLogo.url} alt="Uptrend logo" className="h-10 w-10 object-cover" />
             </div>
-            <span className="text-lg font-bold tracking-tight">Tickr</span>
+            <span className="text-lg font-bold tracking-tight">Uptrend</span>
           </div>
 
           <nav className="ml-6 hidden items-center gap-1 md:flex">
@@ -542,7 +543,7 @@ function Dashboard() {
         <h1 className="sr-only">Stock market dashboard</h1>
 
         {/* KPI row */}
-        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 rounded-3xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:grid-cols-4">
           <Kpi
             icon={<Wallet className="h-4 w-4" />}
             label="Portfolio value"
@@ -573,7 +574,7 @@ function Dashboard() {
         </section>
 
         {/* Chart + Watchlist */}
-        <section className="mt-6 grid gap-4 lg:grid-cols-3">
+        <section className="mt-6 grid gap-4 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-4 lg:grid-cols-3">
           <div className="rounded-2xl border border-border bg-[image:var(--gradient-surface)] p-5 shadow-[var(--shadow-card)] lg:col-span-2">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
@@ -668,7 +669,7 @@ function Dashboard() {
         </section>
 
         {/* Sector + News + Positions */}
-        <section className="mt-6 grid gap-4 lg:grid-cols-3">
+        <section className="mt-6 grid gap-4 rounded-3xl border border-amber-500/20 bg-amber-500/5 p-4 lg:grid-cols-3">
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Sector performance</h2>
@@ -749,7 +750,7 @@ function Dashboard() {
         </section>
 
         {/* Positions */}
-        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-cyan-500/25 bg-cyan-500/5 p-5 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Open positions</h2>
             <span className="text-xs text-muted-foreground">{positions.length} holdings</span>
@@ -798,12 +799,16 @@ function Dashboard() {
           </div>
         </section>
 
-        <PortfolioInsights positions={positions} />
+        <div className="mt-6 rounded-3xl border border-violet-500/20 bg-violet-500/5 p-4">
+          <PortfolioInsights positions={positions} />
+        </div>
 
-        <SmartAlerts />
+        <div className="mt-6 rounded-3xl border border-teal-500/20 bg-teal-500/5 p-4">
+          <SmartAlerts />
+        </div>
 
         {/* Goal-based investing */}
-        <section id="goals" className="mt-6 scroll-mt-24">
+        <section id="goals" className="mt-6 scroll-mt-24 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-4">
           <div className="mb-3 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-2">
