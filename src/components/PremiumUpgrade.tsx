@@ -25,7 +25,7 @@ export function PremiumUpgrade() {
         <div className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-accent">
-              <Crown className="h-3.5 w-3.5" /> Tickr Premium
+              <Crown className="h-3.5 w-3.5" /> Uptrend Premium
             </div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
               Trade with an edge, not on vibes.
