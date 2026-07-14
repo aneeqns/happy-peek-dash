@@ -750,7 +750,7 @@ function Dashboard() {
         </section>
 
         {/* Positions */}
-        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
+        <section id="portfolio" className="mt-6 scroll-mt-24 rounded-2xl border border-cyan-500/25 bg-cyan-500/5 p-5 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Open positions</h2>
             <span className="text-xs text-muted-foreground">{positions.length} holdings</span>
