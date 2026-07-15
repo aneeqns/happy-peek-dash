@@ -41,6 +41,52 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
+// ---------- Custom chart tooltip ----------
+function ChartTooltip({
+  active,
+  payload,
+  label,
+  valueFormatter,
+  labelFormatter,
+  unit,
+  accentByValue,
+}: {
+  active?: boolean;
+  payload?: Array<{ value: number; name?: string; payload?: Record<string, unknown> }>;
+  label?: string | number;
+  valueFormatter: (v: number) => string;
+  labelFormatter?: (label: string | number | undefined, payload?: Record<string, unknown>) => string;
+  unit?: string;
+  accentByValue?: boolean;
+}) {
+  if (!active || !payload || payload.length === 0) return null;
+  const p = payload[0];
+  const v = p.value;
+  const accent = accentByValue
+    ? v >= 0
+      ? "text-emerald-400"
+      : "text-rose-400"
+    : "text-emerald-400";
+  const heading = labelFormatter
+    ? labelFormatter(label, p.payload)
+    : String(p.name ?? "");
+  return (
+    <div className="min-w-[140px] rounded-xl border border-white/15 bg-zinc-950/95 p-3 shadow-2xl ring-1 ring-black/50 backdrop-blur-md">
+      {heading && (
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+          {heading}
+        </p>
+      )}
+      <div className="flex items-baseline justify-between gap-4">
+        <span className="text-xs text-white/70">{unit ?? "Value"}</span>
+        <span className={`text-lg font-semibold tabular-nums tracking-tight ${accent}`}>
+          {valueFormatter(v)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ---------- Mock data ----------
 const portfolio = {
   value: 184_320.42,
