@@ -41,6 +41,52 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
+// ---------- Custom chart tooltip ----------
+function ChartTooltip({
+  active,
+  payload,
+  label,
+  valueFormatter,
+  labelFormatter,
+  unit,
+  accentByValue,
+}: {
+  active?: boolean;
+  payload?: Array<{ value: number; name?: string; payload?: Record<string, unknown> }>;
+  label?: string | number;
+  valueFormatter: (v: number) => string;
+  labelFormatter?: (label: string | number | undefined, payload?: Record<string, unknown>) => string;
+  unit?: string;
+  accentByValue?: boolean;
+}) {
+  if (!active || !payload || payload.length === 0) return null;
+  const p = payload[0];
+  const v = p.value;
+  const accent = accentByValue
+    ? v >= 0
+      ? "text-emerald-400"
+      : "text-rose-400"
+    : "text-emerald-400";
+  const heading = labelFormatter
+    ? labelFormatter(label, p.payload)
+    : String(p.name ?? "");
+  return (
+    <div className="min-w-[140px] rounded-xl border border-white/15 bg-zinc-950/95 p-3 shadow-2xl ring-1 ring-black/50 backdrop-blur-md">
+      {heading && (
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+          {heading}
+        </p>
+      )}
+      <div className="flex items-baseline justify-between gap-4">
+        <span className="text-xs text-white/70">{unit ?? "Value"}</span>
+        <span className={`text-lg font-semibold tabular-nums tracking-tight ${accent}`}>
+          {valueFormatter(v)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ---------- Mock data ----------
 const portfolio = {
   value: 184_320.42,
@@ -594,6 +640,20 @@ function Dashboard() {
                   <span className="ml-1 text-muted-foreground">this month</span>
                 </p>
               </div>
+              <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-sm">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Bull</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-rose-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300">Bear</span>
+                </span>
+                <span className="flex items-center gap-1.5 border-l border-white/10 pl-3">
+                  <span className="h-0.5 w-3 bg-white/40" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/70">Benchmark</span>
+                </span>
+              </div>
               <div className="flex rounded-lg border border-border bg-surface p-1">
                 {(["1D", "1W", "1M", "1Y", "ALL"] as const).map((r) => (
                   <button
@@ -631,14 +691,14 @@ function Dashboard() {
                     tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
                   />
                   <Tooltip
-                    contentStyle={{
-                      background: "oklch(0.2 0.02 265)",
-                      border: "1px solid oklch(0.3 0.03 265)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    labelFormatter={() => ""}
-                    formatter={(v: number) => [`$${fmt(v, 0)}`, "Value"]}
+                    cursor={{ stroke: "rgba(255,255,255,0.4)", strokeWidth: 1, strokeDasharray: "3 3" }}
+                    content={
+                      <ChartTooltip
+                        unit="Value"
+                        valueFormatter={(v) => `$${fmt(v, 0)}`}
+                        labelFormatter={() => "Portfolio"}
+                      />
+                    }
                   />
                   <Area
                     type="monotone"
@@ -673,7 +733,16 @@ function Dashboard() {
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Sector performance</h2>
-              <span className="text-xs text-muted-foreground">Today</span>
+              <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 backdrop-blur-sm">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Gain</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-rose-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300">Loss</span>
+                </span>
+              </div>
             </div>
             <div className="mt-3 h-[240px]">
               <ResponsiveContainer>
@@ -682,13 +751,15 @@ function Dashboard() {
                   <XAxis dataKey="name" tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
                   <Tooltip
-                    contentStyle={{
-                      background: "oklch(0.2 0.02 265)",
-                      border: "1px solid oklch(0.3 0.03 265)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    cursor={{ fill: "oklch(0.28 0.03 265 / 0.4)" }}
+                    cursor={{ fill: "rgba(255,255,255,0.06)" }}
+                    content={
+                      <ChartTooltip
+                        unit="Change"
+                        accentByValue
+                        valueFormatter={(v) => `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`}
+                        labelFormatter={(_, p) => (p?.name as string) ?? "Sector"}
+                      />
+                    }
                   />
                   <Bar dataKey="pct" radius={[6, 6, 0, 0]}>
                     {sectorData.map((s, i) => (
