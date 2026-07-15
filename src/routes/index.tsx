@@ -594,6 +594,20 @@ function Dashboard() {
                   <span className="ml-1 text-muted-foreground">this month</span>
                 </p>
               </div>
+              <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-sm">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Bull</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-rose-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300">Bear</span>
+                </span>
+                <span className="flex items-center gap-1.5 border-l border-white/10 pl-3">
+                  <span className="h-0.5 w-3 bg-white/40" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/70">Benchmark</span>
+                </span>
+              </div>
               <div className="flex rounded-lg border border-border bg-surface p-1">
                 {(["1D", "1W", "1M", "1Y", "ALL"] as const).map((r) => (
                   <button
