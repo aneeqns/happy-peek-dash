@@ -733,7 +733,16 @@ function Dashboard() {
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Sector performance</h2>
-              <span className="text-xs text-muted-foreground">Today</span>
+              <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 backdrop-blur-sm">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Gain</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-rose-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-300">Loss</span>
+                </span>
+              </div>
             </div>
             <div className="mt-3 h-[240px]">
               <ResponsiveContainer>
