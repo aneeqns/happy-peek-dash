@@ -751,13 +751,15 @@ function Dashboard() {
                   <XAxis dataKey="name" tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "oklch(0.68 0.03 260)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
                   <Tooltip
-                    contentStyle={{
-                      background: "oklch(0.2 0.02 265)",
-                      border: "1px solid oklch(0.3 0.03 265)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    cursor={{ fill: "oklch(0.28 0.03 265 / 0.4)" }}
+                    cursor={{ fill: "rgba(255,255,255,0.06)" }}
+                    content={
+                      <ChartTooltip
+                        unit="Change"
+                        accentByValue
+                        valueFormatter={(v) => `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`}
+                        labelFormatter={(_, p) => (p?.name as string) ?? "Sector"}
+                      />
+                    }
                   />
                   <Bar dataKey="pct" radius={[6, 6, 0, 0]}>
                     {sectorData.map((s, i) => (
