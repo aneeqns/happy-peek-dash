@@ -691,14 +691,14 @@ function Dashboard() {
                     tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
                   />
                   <Tooltip
-                    contentStyle={{
-                      background: "oklch(0.2 0.02 265)",
-                      border: "1px solid oklch(0.3 0.03 265)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    labelFormatter={() => ""}
-                    formatter={(v: number) => [`$${fmt(v, 0)}`, "Value"]}
+                    cursor={{ stroke: "rgba(255,255,255,0.4)", strokeWidth: 1, strokeDasharray: "3 3" }}
+                    content={
+                      <ChartTooltip
+                        unit="Value"
+                        valueFormatter={(v) => `$${fmt(v, 0)}`}
+                        labelFormatter={() => "Portfolio"}
+                      />
+                    }
                   />
                   <Area
                     type="monotone"
