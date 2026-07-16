@@ -97,11 +97,25 @@ const portfolio = {
   buyingPower: 24_961.8,
 };
 
+// Seeded PRNG so SSR and client render identical values (no hydration mismatch)
+function mulberry32(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const __rand = mulberry32(1337);
+
 const chartData = Array.from({ length: 60 }, (_, i) => {
   const base = 170_000 + Math.sin(i / 4) * 3000 + i * 220;
-  const noise = Math.cos(i / 2.3) * 1500 + (Math.random() - 0.5) * 800;
+  const noise = Math.cos(i / 2.3) * 1500 + (__rand() - 0.5) * 800;
   return { t: i, v: Math.round(base + noise) };
 });
+
 
 const sectorData = [
   { name: "Tech", pct: 3.2 },
