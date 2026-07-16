@@ -36,6 +36,7 @@ import { PortfolioInsights } from "@/components/PortfolioInsights";
 import { SmartAlerts } from "@/components/SmartAlerts";
 import { PremiumUpgrade } from "@/components/PremiumUpgrade";
 import uptrendLogo from "@/assets/uptrend-logo.png.asset.json";
+import upbotCharacter from "@/assets/upbot-character.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Dashboard,
@@ -588,8 +589,49 @@ function Dashboard() {
       <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
         <h1 className="sr-only">Stock market dashboard</h1>
 
+        {/* UpBot hero welcome */}
+        <section className="relative mb-4 overflow-hidden rounded-3xl border border-emerald-400/40 bg-gradient-to-br from-slate-950 via-indigo-950 to-emerald-950 p-5 shadow-[0_0_60px_-15px_rgba(16,185,129,0.55)] sm:p-6">
+          <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-emerald-500/25 blur-3xl" />
+          <div className="pointer-events-none absolute -right-10 -bottom-10 h-56 w-56 rounded-full bg-sky-500/25 blur-3xl" />
+          <div className="relative flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-black/30 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-sm">
+                <Sparkles className="h-3 w-3" /> Meet UpBot
+              </div>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Hey, I'm <span className="bg-gradient-to-r from-sky-400 via-emerald-400 to-lime-400 bg-clip-text text-transparent">UpBot</span> — your AI investing companion.
+              </h2>
+              <p className="mt-2 max-w-xl text-sm text-zinc-300">
+                Smart insights, real-time alerts, and goal tracking — all in one place. Let's grow smarter together.
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+                <a href="#insights" className="rounded-lg bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950 shadow-[0_0_20px_rgba(16,185,129,0.5)] transition hover:brightness-110">
+                  Smart Insights
+                </a>
+                <a href="#alerts" className="rounded-lg border border-sky-400/50 bg-sky-500/10 px-4 py-2 text-xs font-semibold text-sky-200 transition hover:bg-sky-500/20">
+                  Set Alerts
+                </a>
+                <a href="#goals" className="rounded-lg border border-fuchsia-400/50 bg-fuchsia-500/10 px-4 py-2 text-xs font-semibold text-fuchsia-200 transition hover:bg-fuchsia-500/20">
+                  Track Goals
+                </a>
+              </div>
+            </div>
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 rounded-full bg-emerald-400/30 blur-2xl" />
+              <img
+                src={upbotCharacter.url}
+                alt="UpBot mascot"
+                width={220}
+                height={220}
+                className="relative h-40 w-40 animate-[float_4s_ease-in-out_infinite] object-contain drop-shadow-[0_10px_30px_rgba(16,185,129,0.5)] sm:h-52 sm:w-52"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* KPI row */}
         <section id="dashboard" className="scroll-mt-24 grid grid-cols-2 gap-3 rounded-3xl border border-emerald-400/40 bg-gradient-to-br from-emerald-500/25 via-emerald-400/10 to-lime-500/15 p-4 shadow-[0_0_40px_-10px_rgba(16,185,129,0.35)] sm:grid-cols-4">
+
           <Kpi
             icon={<Wallet className="h-4 w-4" />}
             label="Portfolio value"
