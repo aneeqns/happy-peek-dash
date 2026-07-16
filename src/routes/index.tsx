@@ -148,8 +148,9 @@ const initialWatchlist: Ticker[] = [
 
 function gen() {
   let v = 100;
-  return Array.from({ length: 24 }, () => (v += (Math.random() - 0.45) * 4));
+  return Array.from({ length: 24 }, () => (v += (__rand() - 0.45) * 4));
 }
+
 
 const indices = [
   { name: "S&P 500", value: 5_812.44, pct: 0.62 },
