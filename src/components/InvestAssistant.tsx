@@ -1,8 +1,9 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { Bot, Send, Sparkles, X } from "lucide-react";
+import { Send, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import upbotCharacter from "@/assets/upbot-character.png.asset.json";
 
 const STARTERS = [
   "Where should I invest $5k for 3 years?",
@@ -43,10 +44,10 @@ export function InvestAssistant() {
       {/* Floating trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:scale-[1.03]"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-emerald-500 to-lime-500 py-2 pl-2 pr-4 text-sm font-semibold text-emerald-950 shadow-[0_0_30px_rgba(16,185,129,0.6)] transition hover:scale-[1.03]"
       >
-        <Sparkles className="h-4 w-4" />
-        Ask Uptrend AI
+        <img src={upbotCharacter.url} alt="" width={32} height={32} className="h-8 w-8 rounded-full bg-black/20 object-contain" />
+        Ask UpBot
       </button>
 
       {/* Drawer */}
@@ -56,13 +57,13 @@ export function InvestAssistant() {
         }`}
       >
         <header className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-            <Bot className="h-5 w-5" />
+          <div className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-sky-500/30 to-emerald-500/30 p-1 shadow-[0_0_20px_rgba(16,185,129,0.5)]">
+            <img src={upbotCharacter.url} alt="UpBot" width={40} height={40} className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold">Uptrend AI</p>
+            <p className="text-sm font-semibold">UpBot</p>
             <p className="text-[11px] text-muted-foreground">
-              Investing research copilot · not financial advice
+              Your AI investing companion · not financial advice
             </p>
           </div>
           <button
