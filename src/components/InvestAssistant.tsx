@@ -3,6 +3,8 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { ChatChart } from "@/components/ChatChart";
+import type { ChartPayload } from "@/lib/chart-tool";
 import upbotCharacter from "@/assets/upbot-character.png.asset.json";
 
 const STARTERS = [
@@ -163,10 +165,21 @@ function Bubble({ message }: { message: UIMessage }) {
   const text = message.parts
     .map((p) => (p.type === "text" ? p.text : ""))
     .join("");
+  const charts = message.parts
+    .filter(
+      (p: any) =>
+        p.type === "tool-show_chart" && p.state === "output-available" && p.output,
+    )
+    .map((p: any) => p.output as ChartPayload);
+  const chartPending = message.parts.some(
+    (p: any) =>
+      p.type === "tool-show_chart" &&
+      (p.state === "input-streaming" || p.state === "input-available"),
+  );
   return (
     <li className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${
+        className={`max-w-[92%] rounded-2xl px-3.5 py-2.5 text-sm ${
           isUser
             ? "bg-primary text-primary-foreground"
             : "border border-border bg-surface text-foreground"
@@ -175,8 +188,18 @@ function Bubble({ message }: { message: UIMessage }) {
         {isUser ? (
           <p className="whitespace-pre-wrap">{text}</p>
         ) : (
-          <div className="prose prose-sm prose-invert max-w-none prose-headings:mt-2 prose-headings:mb-1 prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-strong:text-bull">
-            <ReactMarkdown>{text}</ReactMarkdown>
+          <div className="space-y-2">
+            {text && (
+              <div className="prose prose-sm prose-invert max-w-none prose-headings:mt-2 prose-headings:mb-1 prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-strong:text-bull">
+                <ReactMarkdown>{text}</ReactMarkdown>
+              </div>
+            )}
+            {chartPending && charts.length === 0 && (
+              <p className="text-xs text-muted-foreground">Drawing chart…</p>
+            )}
+            {charts.map((c, i) => (
+              <ChatChart key={`${c.symbol}-${i}`} data={c} />
+            ))}
           </div>
         )}
       </div>
