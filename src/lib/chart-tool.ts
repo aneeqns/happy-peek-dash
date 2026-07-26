@@ -56,7 +56,7 @@ export function buildSeries(opts: {
   const rand = mulberry32(hash(`${opts.symbol}|${timeframe}`));
   const base = opts.base ?? 40 + (hash(opts.symbol) % 400);
   const vol = opts.volatility ?? 0.025;
-  const drift = opts.trend === "down" ? -0.006 : opts.trend === "flat" ? 0 : 0.006;
+  const drift = opts.trend === "down" ? -0.022 : opts.trend === "flat" ? 0 : 0.022;
 
   let v = base;
   const points: ChartPoint[] = [];
