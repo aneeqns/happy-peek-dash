@@ -582,7 +582,7 @@ function Dashboard() {
             <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent" />
             <div className="flex w-max animate-[ticker_40s_linear_infinite] gap-8 pl-8 group-hover:[animation-play-state:paused]">
               {[...indices, ...indices, ...indices, ...indices].map((idx, i) => (
-                <div key={i} className="flex shrink-0 items-center gap-2 text-xs">
+                <div key={i} className="flex shrink-0 items-center gap-3 text-xs">
                   <span className="font-semibold uppercase tracking-wide text-muted-foreground">
                     {idx.name}
                   </span>
@@ -592,6 +592,10 @@ function Dashboard() {
                   >
                     {idx.pct >= 0 ? "+" : ""}
                     {idx.pct.toFixed(2)}%
+                  </span>
+                  <span className="h-3 w-px bg-border/60" />
+                  <span className="bg-gradient-to-r from-emerald-300 via-sky-300 to-fuchsia-300 bg-clip-text font-semibold tracking-wide text-transparent">
+                    Invest Smarter, Grow Faster
                   </span>
                   <span className="text-muted-foreground/40">•</span>
                 </div>
