@@ -21,9 +21,11 @@ import { Route as AppPortfolioRouteImport } from './routes/_app.portfolio'
 import { Route as AppNewsRouteImport } from './routes/_app.news'
 import { Route as AppMarketsRouteImport } from './routes/_app.markets'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCreatorRouteImport } from './routes/_app.creator'
 import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index'
 
 const ForbiddenRoute = ForbiddenRouteImport.update({
   id: '/forbidden',
@@ -84,6 +86,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCreatorRoute = AppCreatorRouteImport.update({
+  id: '/creator',
+  path: '/creator',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
@@ -99,6 +106,11 @@ const AppAlertsRoute = AppAlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCreatorIndexRoute = AppCreatorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
   '/assistant': typeof AppAssistantRoute
+  '/creator': typeof AppCreatorRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/markets': typeof AppMarketsRoute
   '/news': typeof AppNewsRoute
@@ -115,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -131,6 +145,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -141,6 +156,7 @@ export interface FileRoutesById {
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/analytics': typeof AppAnalyticsRoute
   '/_app/assistant': typeof AppAssistantRoute
+  '/_app/creator': typeof AppCreatorRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/markets': typeof AppMarketsRoute
   '/_app/news': typeof AppNewsRoute
@@ -149,6 +165,7 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/_app/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,6 +176,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/analytics'
     | '/assistant'
+    | '/creator'
     | '/dashboard'
     | '/markets'
     | '/news'
@@ -167,6 +185,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/creator/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,6 +202,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/creator'
   id:
     | '__root__'
     | '/'
@@ -192,6 +212,7 @@ export interface FileRouteTypes {
     | '/_app/alerts'
     | '/_app/analytics'
     | '/_app/assistant'
+    | '/_app/creator'
     | '/_app/dashboard'
     | '/_app/markets'
     | '/_app/news'
@@ -200,6 +221,7 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/_app/watchlist'
     | '/api/chat'
+    | '/_app/creator/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -296,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/creator': {
+      id: '/_app/creator'
+      path: '/creator'
+      fullPath: '/creator'
+      preLoaderRoute: typeof AppCreatorRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/assistant': {
       id: '/_app/assistant'
       path: '/assistant'
@@ -317,13 +346,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAlertsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/creator/': {
+      id: '/_app/creator/'
+      path: '/'
+      fullPath: '/creator/'
+      preLoaderRoute: typeof AppCreatorIndexRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
   }
 }
+
+interface AppCreatorRouteChildren {
+  AppCreatorIndexRoute: typeof AppCreatorIndexRoute
+}
+
+const AppCreatorRouteChildren: AppCreatorRouteChildren = {
+  AppCreatorIndexRoute: AppCreatorIndexRoute,
+}
+
+const AppCreatorRouteWithChildren = AppCreatorRoute._addFileChildren(
+  AppCreatorRouteChildren,
+)
 
 interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppCreatorRoute: typeof AppCreatorRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppMarketsRoute: typeof AppMarketsRoute
   AppNewsRoute: typeof AppNewsRoute
@@ -337,6 +386,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppAnalyticsRoute: AppAnalyticsRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppCreatorRoute: AppCreatorRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppMarketsRoute: AppMarketsRoute,
   AppNewsRoute: AppNewsRoute,
