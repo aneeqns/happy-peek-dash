@@ -57,17 +57,28 @@ type AuthValue = {
 
 const AuthContext = createContext<AuthValue | null>(null);
 
-function readStored(): Stored | null {
+/**
+ * Reads the demo session outside React — used by route guards in `beforeLoad`.
+ * Client-only: protected layouts run with `ssr: false`.
+ */
+export function readAuthSnapshot(): { role: Role; effectiveRole: Role } | null {
+  if (typeof localStorage === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<Stored>;
     if (parsed.role !== "customer" && parsed.role !== "creator") return null;
-    const viewAs = parsed.viewAs === "creator" && parsed.role === "creator" ? "creator" : parsed.role === "creator" ? (parsed.viewAs ?? "creator") : "customer";
-    return { role: parsed.role, viewAs: viewAs as Role };
+    const effectiveRole: Role =
+      parsed.role === "creator" ? (parsed.viewAs === "customer" ? "customer" : "creator") : "customer";
+    return { role: parsed.role, effectiveRole };
   } catch {
     return null;
   }
+}
+
+function readStored(): Stored | null {
+  const snap = readAuthSnapshot();
+  return snap ? { role: snap.role, viewAs: snap.effectiveRole } : null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
