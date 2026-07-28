@@ -72,9 +72,9 @@ function DashboardPage() {
                 <Sparkline data={t.spark} className="h-7 w-16" />
                 <div className="w-20 text-right">
                   <p className="font-mono-nums text-sm">{fmt(t.price)}</p>
-                  <p className={`font-mono-nums text-[11px] ${t.pct >= 0 ? "text-bull" : "text-bear"}`}>
-                    {t.pct >= 0 ? "+" : ""}
-                    {t.pct.toFixed(2)}%
+                  <p className={`font-mono-nums text-[11px] ${t.changePct >= 0 ? "text-bull" : "text-bear"}`}>
+                    {t.changePct >= 0 ? "+" : ""}
+                    {t.changePct.toFixed(2)}%
                   </p>
                 </div>
               </li>
