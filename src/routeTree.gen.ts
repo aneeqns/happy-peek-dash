@@ -9,9 +9,47 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ForbiddenRouteImport } from './routes/forbidden'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AppWatchlistRouteImport } from './routes/_app.watchlist'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppPortfolioRouteImport } from './routes/_app.portfolio'
+import { Route as AppNewsRouteImport } from './routes/_app.news'
+import { Route as AppMarketsRouteImport } from './routes/_app.markets'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCreatorRouteImport } from './routes/_app.creator'
+import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
+import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index'
+import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
+import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
+import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
+import { Route as AppCreatorRevenueRouteImport } from './routes/_app.creator.revenue'
+import { Route as AppCreatorContentRouteImport } from './routes/_app.creator.content'
+import { Route as AppCreatorAuditRouteImport } from './routes/_app.creator.audit'
+import { Route as AppCreatorAnnouncementsRouteImport } from './routes/_app.creator.announcements'
+import { Route as AppCreatorAnalyticsRouteImport } from './routes/_app.creator.analytics'
+import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
 
+const ForbiddenRoute = ForbiddenRouteImport.update({
+  id: '/forbidden',
+  path: '/forbidden',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -22,35 +60,309 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppWatchlistRoute = AppWatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPortfolioRoute = AppPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNewsRoute = AppNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketsRoute = AppMarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCreatorRoute = AppCreatorRouteImport.update({
+  id: '/creator',
+  path: '/creator',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssistantRoute = AppAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCreatorIndexRoute = AppCreatorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorUsersRoute = AppCreatorUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorStocksRoute = AppCreatorStocksRouteImport.update({
+  id: '/stocks',
+  path: '/stocks',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorSettingsRoute = AppCreatorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorRevenueRoute = AppCreatorRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorContentRoute = AppCreatorContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAuditRoute = AppCreatorAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnnouncementsRoute = AppCreatorAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnalyticsRoute = AppCreatorAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
+  '/assistant': typeof AppAssistantRoute
+  '/creator': typeof AppCreatorRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/markets': typeof AppMarketsRoute
+  '/news': typeof AppNewsRoute
+  '/portfolio': typeof AppPortfolioRoute
+  '/profile': typeof AppProfileRoute
+  '/settings': typeof AppSettingsRoute
+  '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator/ai': typeof AppCreatorAiRoute
+  '/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/creator/audit': typeof AppCreatorAuditRoute
+  '/creator/content': typeof AppCreatorContentRoute
+  '/creator/revenue': typeof AppCreatorRevenueRoute
+  '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/stocks': typeof AppCreatorStocksRoute
+  '/creator/users': typeof AppCreatorUsersRoute
+  '/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
+  '/assistant': typeof AppAssistantRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/markets': typeof AppMarketsRoute
+  '/news': typeof AppNewsRoute
+  '/portfolio': typeof AppPortfolioRoute
+  '/profile': typeof AppProfileRoute
+  '/settings': typeof AppSettingsRoute
+  '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator/ai': typeof AppCreatorAiRoute
+  '/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/creator/audit': typeof AppCreatorAuditRoute
+  '/creator/content': typeof AppCreatorContentRoute
+  '/creator/revenue': typeof AppCreatorRevenueRoute
+  '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/stocks': typeof AppCreatorStocksRoute
+  '/creator/users': typeof AppCreatorUsersRoute
+  '/creator': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/forbidden': typeof ForbiddenRoute
+  '/_app/alerts': typeof AppAlertsRoute
+  '/_app/analytics': typeof AppAnalyticsRoute
+  '/_app/assistant': typeof AppAssistantRoute
+  '/_app/creator': typeof AppCreatorRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/markets': typeof AppMarketsRoute
+  '/_app/news': typeof AppNewsRoute
+  '/_app/portfolio': typeof AppPortfolioRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/_app/creator/ai': typeof AppCreatorAiRoute
+  '/_app/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/_app/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/_app/creator/audit': typeof AppCreatorAuditRoute
+  '/_app/creator/content': typeof AppCreatorContentRoute
+  '/_app/creator/revenue': typeof AppCreatorRevenueRoute
+  '/_app/creator/settings': typeof AppCreatorSettingsRoute
+  '/_app/creator/stocks': typeof AppCreatorStocksRoute
+  '/_app/creator/users': typeof AppCreatorUsersRoute
+  '/_app/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/forbidden'
+    | '/alerts'
+    | '/analytics'
+    | '/assistant'
+    | '/creator'
+    | '/dashboard'
+    | '/markets'
+    | '/news'
+    | '/portfolio'
+    | '/profile'
+    | '/settings'
+    | '/watchlist'
+    | '/api/chat'
+    | '/creator/ai'
+    | '/creator/analytics'
+    | '/creator/announcements'
+    | '/creator/audit'
+    | '/creator/content'
+    | '/creator/revenue'
+    | '/creator/settings'
+    | '/creator/stocks'
+    | '/creator/users'
+    | '/creator/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/chat'
-  id: '__root__' | '/' | '/api/chat'
+  to:
+    | '/'
+    | '/auth'
+    | '/forbidden'
+    | '/alerts'
+    | '/analytics'
+    | '/assistant'
+    | '/dashboard'
+    | '/markets'
+    | '/news'
+    | '/portfolio'
+    | '/profile'
+    | '/settings'
+    | '/watchlist'
+    | '/api/chat'
+    | '/creator/ai'
+    | '/creator/analytics'
+    | '/creator/announcements'
+    | '/creator/audit'
+    | '/creator/content'
+    | '/creator/revenue'
+    | '/creator/settings'
+    | '/creator/stocks'
+    | '/creator/users'
+    | '/creator'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/auth'
+    | '/forbidden'
+    | '/_app/alerts'
+    | '/_app/analytics'
+    | '/_app/assistant'
+    | '/_app/creator'
+    | '/_app/dashboard'
+    | '/_app/markets'
+    | '/_app/news'
+    | '/_app/portfolio'
+    | '/_app/profile'
+    | '/_app/settings'
+    | '/_app/watchlist'
+    | '/api/chat'
+    | '/_app/creator/ai'
+    | '/_app/creator/analytics'
+    | '/_app/creator/announcements'
+    | '/_app/creator/audit'
+    | '/_app/creator/content'
+    | '/_app/creator/revenue'
+    | '/_app/creator/settings'
+    | '/_app/creator/stocks'
+    | '/_app/creator/users'
+    | '/_app/creator/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ForbiddenRoute: typeof ForbiddenRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/forbidden': {
+      id: '/forbidden'
+      path: '/forbidden'
+      fullPath: '/forbidden'
+      preLoaderRoute: typeof ForbiddenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,23 +377,223 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/watchlist': {
+      id: '/_app/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof AppWatchlistRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/portfolio': {
+      id: '/_app/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AppPortfolioRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/news': {
+      id: '/_app/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof AppNewsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/markets': {
+      id: '/_app/markets'
+      path: '/markets'
+      fullPath: '/markets'
+      preLoaderRoute: typeof AppMarketsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/creator': {
+      id: '/_app/creator'
+      path: '/creator'
+      fullPath: '/creator'
+      preLoaderRoute: typeof AppCreatorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assistant': {
+      id: '/_app/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics': {
+      id: '/_app/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/creator/': {
+      id: '/_app/creator/'
+      path: '/'
+      fullPath: '/creator/'
+      preLoaderRoute: typeof AppCreatorIndexRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/users': {
+      id: '/_app/creator/users'
+      path: '/users'
+      fullPath: '/creator/users'
+      preLoaderRoute: typeof AppCreatorUsersRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/stocks': {
+      id: '/_app/creator/stocks'
+      path: '/stocks'
+      fullPath: '/creator/stocks'
+      preLoaderRoute: typeof AppCreatorStocksRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/settings': {
+      id: '/_app/creator/settings'
+      path: '/settings'
+      fullPath: '/creator/settings'
+      preLoaderRoute: typeof AppCreatorSettingsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/revenue': {
+      id: '/_app/creator/revenue'
+      path: '/revenue'
+      fullPath: '/creator/revenue'
+      preLoaderRoute: typeof AppCreatorRevenueRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/content': {
+      id: '/_app/creator/content'
+      path: '/content'
+      fullPath: '/creator/content'
+      preLoaderRoute: typeof AppCreatorContentRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/audit': {
+      id: '/_app/creator/audit'
+      path: '/audit'
+      fullPath: '/creator/audit'
+      preLoaderRoute: typeof AppCreatorAuditRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/announcements': {
+      id: '/_app/creator/announcements'
+      path: '/announcements'
+      fullPath: '/creator/announcements'
+      preLoaderRoute: typeof AppCreatorAnnouncementsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/analytics': {
+      id: '/_app/creator/analytics'
+      path: '/analytics'
+      fullPath: '/creator/analytics'
+      preLoaderRoute: typeof AppCreatorAnalyticsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/ai': {
+      id: '/_app/creator/ai'
+      path: '/ai'
+      fullPath: '/creator/ai'
+      preLoaderRoute: typeof AppCreatorAiRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
   }
 }
 
+interface AppCreatorRouteChildren {
+  AppCreatorAiRoute: typeof AppCreatorAiRoute
+  AppCreatorAnalyticsRoute: typeof AppCreatorAnalyticsRoute
+  AppCreatorAnnouncementsRoute: typeof AppCreatorAnnouncementsRoute
+  AppCreatorAuditRoute: typeof AppCreatorAuditRoute
+  AppCreatorContentRoute: typeof AppCreatorContentRoute
+  AppCreatorRevenueRoute: typeof AppCreatorRevenueRoute
+  AppCreatorSettingsRoute: typeof AppCreatorSettingsRoute
+  AppCreatorStocksRoute: typeof AppCreatorStocksRoute
+  AppCreatorUsersRoute: typeof AppCreatorUsersRoute
+  AppCreatorIndexRoute: typeof AppCreatorIndexRoute
+}
+
+const AppCreatorRouteChildren: AppCreatorRouteChildren = {
+  AppCreatorAiRoute: AppCreatorAiRoute,
+  AppCreatorAnalyticsRoute: AppCreatorAnalyticsRoute,
+  AppCreatorAnnouncementsRoute: AppCreatorAnnouncementsRoute,
+  AppCreatorAuditRoute: AppCreatorAuditRoute,
+  AppCreatorContentRoute: AppCreatorContentRoute,
+  AppCreatorRevenueRoute: AppCreatorRevenueRoute,
+  AppCreatorSettingsRoute: AppCreatorSettingsRoute,
+  AppCreatorStocksRoute: AppCreatorStocksRoute,
+  AppCreatorUsersRoute: AppCreatorUsersRoute,
+  AppCreatorIndexRoute: AppCreatorIndexRoute,
+}
+
+const AppCreatorRouteWithChildren = AppCreatorRoute._addFileChildren(
+  AppCreatorRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppAssistantRoute: typeof AppAssistantRoute
+  AppCreatorRoute: typeof AppCreatorRouteWithChildren
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppMarketsRoute: typeof AppMarketsRoute
+  AppNewsRoute: typeof AppNewsRoute
+  AppPortfolioRoute: typeof AppPortfolioRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppWatchlistRoute: typeof AppWatchlistRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAlertsRoute: AppAlertsRoute,
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppAssistantRoute: AppAssistantRoute,
+  AppCreatorRoute: AppCreatorRouteWithChildren,
+  AppDashboardRoute: AppDashboardRoute,
+  AppMarketsRoute: AppMarketsRoute,
+  AppNewsRoute: AppNewsRoute,
+  AppPortfolioRoute: AppPortfolioRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppWatchlistRoute: AppWatchlistRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ForbiddenRoute: ForbiddenRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
