@@ -26,6 +26,15 @@ import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index'
+import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
+import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
+import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
+import { Route as AppCreatorRevenueRouteImport } from './routes/_app.creator.revenue'
+import { Route as AppCreatorContentRouteImport } from './routes/_app.creator.content'
+import { Route as AppCreatorAuditRouteImport } from './routes/_app.creator.audit'
+import { Route as AppCreatorAnnouncementsRouteImport } from './routes/_app.creator.announcements'
+import { Route as AppCreatorAnalyticsRouteImport } from './routes/_app.creator.analytics'
+import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
 
 const ForbiddenRoute = ForbiddenRouteImport.update({
   id: '/forbidden',
@@ -111,6 +120,51 @@ const AppCreatorIndexRoute = AppCreatorIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppCreatorRoute,
 } as any)
+const AppCreatorUsersRoute = AppCreatorUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorStocksRoute = AppCreatorStocksRouteImport.update({
+  id: '/stocks',
+  path: '/stocks',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorSettingsRoute = AppCreatorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorRevenueRoute = AppCreatorRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorContentRoute = AppCreatorContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAuditRoute = AppCreatorAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnnouncementsRoute = AppCreatorAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnalyticsRoute = AppCreatorAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -128,6 +182,15 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator/ai': typeof AppCreatorAiRoute
+  '/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/creator/audit': typeof AppCreatorAuditRoute
+  '/creator/content': typeof AppCreatorContentRoute
+  '/creator/revenue': typeof AppCreatorRevenueRoute
+  '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/stocks': typeof AppCreatorStocksRoute
+  '/creator/users': typeof AppCreatorUsersRoute
   '/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesByTo {
@@ -145,6 +208,15 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/creator/ai': typeof AppCreatorAiRoute
+  '/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/creator/audit': typeof AppCreatorAuditRoute
+  '/creator/content': typeof AppCreatorContentRoute
+  '/creator/revenue': typeof AppCreatorRevenueRoute
+  '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/stocks': typeof AppCreatorStocksRoute
+  '/creator/users': typeof AppCreatorUsersRoute
   '/creator': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesById {
@@ -165,6 +237,15 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/_app/creator/ai': typeof AppCreatorAiRoute
+  '/_app/creator/analytics': typeof AppCreatorAnalyticsRoute
+  '/_app/creator/announcements': typeof AppCreatorAnnouncementsRoute
+  '/_app/creator/audit': typeof AppCreatorAuditRoute
+  '/_app/creator/content': typeof AppCreatorContentRoute
+  '/_app/creator/revenue': typeof AppCreatorRevenueRoute
+  '/_app/creator/settings': typeof AppCreatorSettingsRoute
+  '/_app/creator/stocks': typeof AppCreatorStocksRoute
+  '/_app/creator/users': typeof AppCreatorUsersRoute
   '/_app/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRouteTypes {
@@ -185,6 +266,15 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/creator/ai'
+    | '/creator/analytics'
+    | '/creator/announcements'
+    | '/creator/audit'
+    | '/creator/content'
+    | '/creator/revenue'
+    | '/creator/settings'
+    | '/creator/stocks'
+    | '/creator/users'
     | '/creator/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -202,6 +292,15 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/creator/ai'
+    | '/creator/analytics'
+    | '/creator/announcements'
+    | '/creator/audit'
+    | '/creator/content'
+    | '/creator/revenue'
+    | '/creator/settings'
+    | '/creator/stocks'
+    | '/creator/users'
     | '/creator'
   id:
     | '__root__'
@@ -221,6 +320,15 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/_app/watchlist'
     | '/api/chat'
+    | '/_app/creator/ai'
+    | '/_app/creator/analytics'
+    | '/_app/creator/announcements'
+    | '/_app/creator/audit'
+    | '/_app/creator/content'
+    | '/_app/creator/revenue'
+    | '/_app/creator/settings'
+    | '/_app/creator/stocks'
+    | '/_app/creator/users'
     | '/_app/creator/'
   fileRoutesById: FileRoutesById
 }
@@ -353,14 +461,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCreatorIndexRouteImport
       parentRoute: typeof AppCreatorRoute
     }
+    '/_app/creator/users': {
+      id: '/_app/creator/users'
+      path: '/users'
+      fullPath: '/creator/users'
+      preLoaderRoute: typeof AppCreatorUsersRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/stocks': {
+      id: '/_app/creator/stocks'
+      path: '/stocks'
+      fullPath: '/creator/stocks'
+      preLoaderRoute: typeof AppCreatorStocksRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/settings': {
+      id: '/_app/creator/settings'
+      path: '/settings'
+      fullPath: '/creator/settings'
+      preLoaderRoute: typeof AppCreatorSettingsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/revenue': {
+      id: '/_app/creator/revenue'
+      path: '/revenue'
+      fullPath: '/creator/revenue'
+      preLoaderRoute: typeof AppCreatorRevenueRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/content': {
+      id: '/_app/creator/content'
+      path: '/content'
+      fullPath: '/creator/content'
+      preLoaderRoute: typeof AppCreatorContentRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/audit': {
+      id: '/_app/creator/audit'
+      path: '/audit'
+      fullPath: '/creator/audit'
+      preLoaderRoute: typeof AppCreatorAuditRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/announcements': {
+      id: '/_app/creator/announcements'
+      path: '/announcements'
+      fullPath: '/creator/announcements'
+      preLoaderRoute: typeof AppCreatorAnnouncementsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/analytics': {
+      id: '/_app/creator/analytics'
+      path: '/analytics'
+      fullPath: '/creator/analytics'
+      preLoaderRoute: typeof AppCreatorAnalyticsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/ai': {
+      id: '/_app/creator/ai'
+      path: '/ai'
+      fullPath: '/creator/ai'
+      preLoaderRoute: typeof AppCreatorAiRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
   }
 }
 
 interface AppCreatorRouteChildren {
+  AppCreatorAiRoute: typeof AppCreatorAiRoute
+  AppCreatorAnalyticsRoute: typeof AppCreatorAnalyticsRoute
+  AppCreatorAnnouncementsRoute: typeof AppCreatorAnnouncementsRoute
+  AppCreatorAuditRoute: typeof AppCreatorAuditRoute
+  AppCreatorContentRoute: typeof AppCreatorContentRoute
+  AppCreatorRevenueRoute: typeof AppCreatorRevenueRoute
+  AppCreatorSettingsRoute: typeof AppCreatorSettingsRoute
+  AppCreatorStocksRoute: typeof AppCreatorStocksRoute
+  AppCreatorUsersRoute: typeof AppCreatorUsersRoute
   AppCreatorIndexRoute: typeof AppCreatorIndexRoute
 }
 
 const AppCreatorRouteChildren: AppCreatorRouteChildren = {
+  AppCreatorAiRoute: AppCreatorAiRoute,
+  AppCreatorAnalyticsRoute: AppCreatorAnalyticsRoute,
+  AppCreatorAnnouncementsRoute: AppCreatorAnnouncementsRoute,
+  AppCreatorAuditRoute: AppCreatorAuditRoute,
+  AppCreatorContentRoute: AppCreatorContentRoute,
+  AppCreatorRevenueRoute: AppCreatorRevenueRoute,
+  AppCreatorSettingsRoute: AppCreatorSettingsRoute,
+  AppCreatorStocksRoute: AppCreatorStocksRoute,
+  AppCreatorUsersRoute: AppCreatorUsersRoute,
   AppCreatorIndexRoute: AppCreatorIndexRoute,
 }
 
@@ -408,3 +597,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
