@@ -13,6 +13,7 @@ import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiCoachRouteImport } from './routes/api/coach'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AppWatchlistRouteImport } from './routes/_app.watchlist'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
@@ -22,6 +23,7 @@ import { Route as AppNewsRouteImport } from './routes/_app.news'
 import { Route as AppMarketsRouteImport } from './routes/_app.markets'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCreatorRouteImport } from './routes/_app.creator'
+import { Route as AppCoachRouteImport } from './routes/_app.coach'
 import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
@@ -53,6 +55,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCoachRoute = ApiCoachRouteImport.update({
+  id: '/api/coach',
+  path: '/api/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -98,6 +105,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppCreatorRoute = AppCreatorRouteImport.update({
   id: '/creator',
   path: '/creator',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCoachRoute = AppCoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
@@ -173,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
   '/assistant': typeof AppAssistantRoute
+  '/coach': typeof AppCoachRoute
   '/creator': typeof AppCreatorRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/markets': typeof AppMarketsRoute
@@ -182,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/coach': typeof ApiCoachRoute
   '/creator/ai': typeof AppCreatorAiRoute
   '/creator/analytics': typeof AppCreatorAnalyticsRoute
   '/creator/announcements': typeof AppCreatorAnnouncementsRoute
@@ -200,6 +214,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
   '/assistant': typeof AppAssistantRoute
+  '/coach': typeof AppCoachRoute
   '/dashboard': typeof AppDashboardRoute
   '/markets': typeof AppMarketsRoute
   '/news': typeof AppNewsRoute
@@ -208,6 +223,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/coach': typeof ApiCoachRoute
   '/creator/ai': typeof AppCreatorAiRoute
   '/creator/analytics': typeof AppCreatorAnalyticsRoute
   '/creator/announcements': typeof AppCreatorAnnouncementsRoute
@@ -228,6 +244,7 @@ export interface FileRoutesById {
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/analytics': typeof AppAnalyticsRoute
   '/_app/assistant': typeof AppAssistantRoute
+  '/_app/coach': typeof AppCoachRoute
   '/_app/creator': typeof AppCreatorRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/markets': typeof AppMarketsRoute
@@ -237,6 +254,7 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/coach': typeof ApiCoachRoute
   '/_app/creator/ai': typeof AppCreatorAiRoute
   '/_app/creator/analytics': typeof AppCreatorAnalyticsRoute
   '/_app/creator/announcements': typeof AppCreatorAnnouncementsRoute
@@ -257,6 +275,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/analytics'
     | '/assistant'
+    | '/coach'
     | '/creator'
     | '/dashboard'
     | '/markets'
@@ -266,6 +285,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/api/coach'
     | '/creator/ai'
     | '/creator/analytics'
     | '/creator/announcements'
@@ -284,6 +304,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/analytics'
     | '/assistant'
+    | '/coach'
     | '/dashboard'
     | '/markets'
     | '/news'
@@ -292,6 +313,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/api/chat'
+    | '/api/coach'
     | '/creator/ai'
     | '/creator/analytics'
     | '/creator/announcements'
@@ -311,6 +333,7 @@ export interface FileRouteTypes {
     | '/_app/alerts'
     | '/_app/analytics'
     | '/_app/assistant'
+    | '/_app/coach'
     | '/_app/creator'
     | '/_app/dashboard'
     | '/_app/markets'
@@ -320,6 +343,7 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/_app/watchlist'
     | '/api/chat'
+    | '/api/coach'
     | '/_app/creator/ai'
     | '/_app/creator/analytics'
     | '/_app/creator/announcements'
@@ -338,6 +362,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ForbiddenRoute: typeof ForbiddenRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiCoachRoute: typeof ApiCoachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -368,6 +393,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/coach': {
+      id: '/api/coach'
+      path: '/api/coach'
+      fullPath: '/api/coach'
+      preLoaderRoute: typeof ApiCoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -431,6 +463,13 @@ declare module '@tanstack/react-router' {
       path: '/creator'
       fullPath: '/creator'
       preLoaderRoute: typeof AppCreatorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/coach': {
+      id: '/_app/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof AppCoachRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/assistant': {
@@ -561,6 +600,7 @@ interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppCoachRoute: typeof AppCoachRoute
   AppCreatorRoute: typeof AppCreatorRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppMarketsRoute: typeof AppMarketsRoute
@@ -575,6 +615,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppAnalyticsRoute: AppAnalyticsRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppCoachRoute: AppCoachRoute,
   AppCreatorRoute: AppCreatorRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppMarketsRoute: AppMarketsRoute,
@@ -593,6 +634,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ForbiddenRoute: ForbiddenRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiCoachRoute: ApiCoachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
