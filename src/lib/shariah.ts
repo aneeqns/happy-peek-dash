@@ -265,3 +265,31 @@ export const STATUS_META: Record<ShariahStatus, { emoji: string; label: string; 
 
 export const SHARIAH_DISCLAIMER =
   "Shariah screening is provided for informational and educational purposes. Screening methodologies may differ, and a company's status can change as its business activities and financial information change. This feature is not a religious ruling or financial advice. Users seeking religious guidance should consult a qualified Shariah scholar.";
+
+/** Approximate market caps (USD, billions) used only for sorting/compare UI. */
+export const marketCapsB: Record<string, number> = {
+  AAPL: 3480, MSFT: 3290, NVDA: 3150, GOOGL: 2190, AMZN: 2060, META: 1300,
+  AVGO: 760, LLY: 800, TSLA: 860, AMD: 273, UNH: 508, XOM: 470, JPM: 620,
+  V: 570, BRK: 940, "BRK.B": 940, DIS: 178, BA: 127, NFLX: 305,
+  SPY: 0, QQQ: 0, VTI: 0, SCHD: 0, BTC: 0, ETH: 0, NIFTY: 0,
+};
+
+/** Sector labels for the industry filter (kept alongside screening records). */
+export const sectorOf: Record<string, string> = {
+  AAPL: "Technology", MSFT: "Technology", NVDA: "Semiconductors", GOOGL: "Communication",
+  AMZN: "Consumer Discretionary", META: "Communication", AVGO: "Semiconductors",
+  AMD: "Semiconductors", TSLA: "Consumer Discretionary", LLY: "Healthcare",
+  UNH: "Healthcare", XOM: "Energy", JPM: "Financials", V: "Financials",
+  DIS: "Communication", BA: "Industrials", NFLX: "Communication", "BRK.B": "Financials",
+  SPY: "Fund", QQQ: "Fund", VTI: "Fund", SCHD: "Fund", BTC: "Digital Assets",
+  ETH: "Digital Assets", NIFTY: "Index",
+};
+
+/** Exchange / market labels for the market filter. */
+export const exchangeOf: Record<string, string> = {
+  AAPL: "NASDAQ", MSFT: "NASDAQ", NVDA: "NASDAQ", GOOGL: "NASDAQ", AMZN: "NASDAQ",
+  META: "NASDAQ", AVGO: "NASDAQ", AMD: "NASDAQ", TSLA: "NASDAQ", NFLX: "NASDAQ",
+  LLY: "NYSE", UNH: "NYSE", XOM: "NYSE", JPM: "NYSE", V: "NYSE", DIS: "NYSE",
+  BA: "NYSE", "BRK.B": "NYSE", SPY: "NYSE Arca", QQQ: "NASDAQ", VTI: "NYSE Arca",
+  SCHD: "NYSE Arca", BTC: "Crypto", ETH: "Crypto", NIFTY: "NSE",
+};
