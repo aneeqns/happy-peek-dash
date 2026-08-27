@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiCoachRouteImport } from './routes/api/coach'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AppWatchlistRouteImport } from './routes/_app.watchlist'
+import { Route as AppShariahRouteImport } from './routes/_app.shariah'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppPortfolioRouteImport } from './routes/_app.portfolio'
@@ -70,6 +71,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
 const AppWatchlistRoute = AppWatchlistRouteImport.update({
   id: '/watchlist',
   path: '/watchlist',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppShariahRoute = AppShariahRouteImport.update({
+  id: '/shariah',
+  path: '/shariah',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof AppPortfolioRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
+  '/shariah': typeof AppShariahRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof AppPortfolioRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
+  '/shariah': typeof AppShariahRoute
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -252,6 +260,7 @@ export interface FileRoutesById {
   '/_app/portfolio': typeof AppPortfolioRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/_app/shariah': typeof AppShariahRoute
   '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profile'
     | '/settings'
+    | '/shariah'
     | '/watchlist'
     | '/api/chat'
     | '/api/coach'
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/profile'
     | '/settings'
+    | '/shariah'
     | '/watchlist'
     | '/api/chat'
     | '/api/coach'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/_app/portfolio'
     | '/_app/profile'
     | '/_app/settings'
+    | '/_app/shariah'
     | '/_app/watchlist'
     | '/api/chat'
     | '/api/coach'
@@ -414,6 +426,13 @@ declare module '@tanstack/react-router' {
       path: '/watchlist'
       fullPath: '/watchlist'
       preLoaderRoute: typeof AppWatchlistRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/shariah': {
+      id: '/_app/shariah'
+      path: '/shariah'
+      fullPath: '/shariah'
+      preLoaderRoute: typeof AppShariahRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings': {
@@ -608,6 +627,7 @@ interface AppRouteChildren {
   AppPortfolioRoute: typeof AppPortfolioRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppShariahRoute: typeof AppShariahRoute
   AppWatchlistRoute: typeof AppWatchlistRoute
 }
 
@@ -623,6 +643,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPortfolioRoute: AppPortfolioRoute,
   AppProfileRoute: AppProfileRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppShariahRoute: AppShariahRoute,
   AppWatchlistRoute: AppWatchlistRoute,
 }
 
