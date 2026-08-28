@@ -29,6 +29,7 @@ import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index'
+import { Route as AppShariahSymbolRouteImport } from './routes/_app.shariah.$symbol'
 import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
 import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
 import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
@@ -138,6 +139,11 @@ const AppCreatorIndexRoute = AppCreatorIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppCreatorRoute,
 } as any)
+const AppShariahSymbolRoute = AppShariahSymbolRouteImport.update({
+  id: '/$symbol',
+  path: '/$symbol',
+  getParentRoute: () => AppShariahRoute,
+} as any)
 const AppCreatorUsersRoute = AppCreatorUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -199,7 +205,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof AppPortfolioRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
-  '/shariah': typeof AppShariahRoute
+  '/shariah': typeof AppShariahRouteWithChildren
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/creator/settings': typeof AppCreatorSettingsRoute
   '/creator/stocks': typeof AppCreatorStocksRoute
   '/creator/users': typeof AppCreatorUsersRoute
+  '/shariah/$symbol': typeof AppShariahSymbolRoute
   '/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesByTo {
@@ -228,7 +235,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof AppPortfolioRoute
   '/profile': typeof AppProfileRoute
   '/settings': typeof AppSettingsRoute
-  '/shariah': typeof AppShariahRoute
+  '/shariah': typeof AppShariahRouteWithChildren
   '/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/creator/settings': typeof AppCreatorSettingsRoute
   '/creator/stocks': typeof AppCreatorStocksRoute
   '/creator/users': typeof AppCreatorUsersRoute
+  '/shariah/$symbol': typeof AppShariahSymbolRoute
   '/creator': typeof AppCreatorIndexRoute
 }
 export interface FileRoutesById {
@@ -260,7 +268,7 @@ export interface FileRoutesById {
   '/_app/portfolio': typeof AppPortfolioRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/settings': typeof AppSettingsRoute
-  '/_app/shariah': typeof AppShariahRoute
+  '/_app/shariah': typeof AppShariahRouteWithChildren
   '/_app/watchlist': typeof AppWatchlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/coach': typeof ApiCoachRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/_app/creator/settings': typeof AppCreatorSettingsRoute
   '/_app/creator/stocks': typeof AppCreatorStocksRoute
   '/_app/creator/users': typeof AppCreatorUsersRoute
+  '/_app/shariah/$symbol': typeof AppShariahSymbolRoute
   '/_app/creator/': typeof AppCreatorIndexRoute
 }
 export interface FileRouteTypes {
@@ -305,6 +314,7 @@ export interface FileRouteTypes {
     | '/creator/settings'
     | '/creator/stocks'
     | '/creator/users'
+    | '/shariah/$symbol'
     | '/creator/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -334,6 +344,7 @@ export interface FileRouteTypes {
     | '/creator/settings'
     | '/creator/stocks'
     | '/creator/users'
+    | '/shariah/$symbol'
     | '/creator'
   id:
     | '__root__'
@@ -365,6 +376,7 @@ export interface FileRouteTypes {
     | '/_app/creator/settings'
     | '/_app/creator/stocks'
     | '/_app/creator/users'
+    | '/_app/shariah/$symbol'
     | '/_app/creator/'
   fileRoutesById: FileRoutesById
 }
@@ -519,6 +531,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCreatorIndexRouteImport
       parentRoute: typeof AppCreatorRoute
     }
+    '/_app/shariah/$symbol': {
+      id: '/_app/shariah/$symbol'
+      path: '/$symbol'
+      fullPath: '/shariah/$symbol'
+      preLoaderRoute: typeof AppShariahSymbolRouteImport
+      parentRoute: typeof AppShariahRoute
+    }
     '/_app/creator/users': {
       id: '/_app/creator/users'
       path: '/users'
@@ -615,6 +634,18 @@ const AppCreatorRouteWithChildren = AppCreatorRoute._addFileChildren(
   AppCreatorRouteChildren,
 )
 
+interface AppShariahRouteChildren {
+  AppShariahSymbolRoute: typeof AppShariahSymbolRoute
+}
+
+const AppShariahRouteChildren: AppShariahRouteChildren = {
+  AppShariahSymbolRoute: AppShariahSymbolRoute,
+}
+
+const AppShariahRouteWithChildren = AppShariahRoute._addFileChildren(
+  AppShariahRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppAnalyticsRoute: typeof AppAnalyticsRoute
@@ -627,7 +658,7 @@ interface AppRouteChildren {
   AppPortfolioRoute: typeof AppPortfolioRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppShariahRoute: typeof AppShariahRoute
+  AppShariahRoute: typeof AppShariahRouteWithChildren
   AppWatchlistRoute: typeof AppWatchlistRoute
 }
 
@@ -643,7 +674,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPortfolioRoute: AppPortfolioRoute,
   AppProfileRoute: AppProfileRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppShariahRoute: AppShariahRoute,
+  AppShariahRoute: AppShariahRouteWithChildren,
   AppWatchlistRoute: AppWatchlistRoute,
 }
 
