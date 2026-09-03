@@ -86,15 +86,15 @@ function CreatorShariahPage() {
             <dl className="grid gap-3 text-xs sm:grid-cols-3">
               <div>
                 <dt className="text-muted-foreground">Debt limit</dt>
-                <dd className="mt-0.5 font-medium">{pctText(m.debtLimit)}</dd>
+                <dd className="mt-0.5 font-medium">{pctText(m.thresholds.debt)}</dd>
               </div>
               <div>
                 <dt className="text-muted-foreground">Liquid assets limit</dt>
-                <dd className="mt-0.5 font-medium">{pctText(m.liquidLimit)}</dd>
+                <dd className="mt-0.5 font-medium">{pctText(m.thresholds.liquidAssets)}</dd>
               </div>
               <div>
                 <dt className="text-muted-foreground">Non-permissible income limit</dt>
-                <dd className="mt-0.5 font-medium">{pctText(m.incomeLimit)}</dd>
+                <dd className="mt-0.5 font-medium">{pctText(m.thresholds.nonPermissibleIncome)}</dd>
               </div>
             </dl>
             <div className="flex flex-wrap gap-1.5">
