@@ -36,6 +36,7 @@ export const customerNav: NavItem[] = [
   { to: "/markets", label: "Markets", icon: Globe2, requires: "customer" },
   { to: "/portfolio", label: "Portfolio", icon: Wallet, requires: "customer" },
   { to: "/watchlist", label: "Watchlist", icon: Star, requires: "customer" },
+  { to: "/shariah", label: "🕌 Shariah Compliant", icon: Moon, requires: "customer" },
   { to: "/news", label: "News", icon: Newspaper, requires: "customer" },
   { to: "/assistant", label: "AI Assistant", icon: Bot, requires: "customer" },
   { to: "/coach", label: "AI Investment Coach", icon: GraduationCap, requires: "customer" },
