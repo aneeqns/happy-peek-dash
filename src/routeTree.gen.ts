@@ -32,6 +32,7 @@ import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index
 import { Route as AppShariahSymbolRouteImport } from './routes/_app.shariah.$symbol'
 import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
 import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
+import { Route as AppCreatorShariahRouteImport } from './routes/_app.creator.shariah'
 import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
 import { Route as AppCreatorRevenueRouteImport } from './routes/_app.creator.revenue'
 import { Route as AppCreatorContentRouteImport } from './routes/_app.creator.content'
@@ -154,6 +155,11 @@ const AppCreatorStocksRoute = AppCreatorStocksRouteImport.update({
   path: '/stocks',
   getParentRoute: () => AppCreatorRoute,
 } as any)
+const AppCreatorShariahRoute = AppCreatorShariahRouteImport.update({
+  id: '/shariah',
+  path: '/shariah',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
 const AppCreatorSettingsRoute = AppCreatorSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/creator/content': typeof AppCreatorContentRoute
   '/creator/revenue': typeof AppCreatorRevenueRoute
   '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/shariah': typeof AppCreatorShariahRoute
   '/creator/stocks': typeof AppCreatorStocksRoute
   '/creator/users': typeof AppCreatorUsersRoute
   '/shariah/$symbol': typeof AppShariahSymbolRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/creator/content': typeof AppCreatorContentRoute
   '/creator/revenue': typeof AppCreatorRevenueRoute
   '/creator/settings': typeof AppCreatorSettingsRoute
+  '/creator/shariah': typeof AppCreatorShariahRoute
   '/creator/stocks': typeof AppCreatorStocksRoute
   '/creator/users': typeof AppCreatorUsersRoute
   '/shariah/$symbol': typeof AppShariahSymbolRoute
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/_app/creator/content': typeof AppCreatorContentRoute
   '/_app/creator/revenue': typeof AppCreatorRevenueRoute
   '/_app/creator/settings': typeof AppCreatorSettingsRoute
+  '/_app/creator/shariah': typeof AppCreatorShariahRoute
   '/_app/creator/stocks': typeof AppCreatorStocksRoute
   '/_app/creator/users': typeof AppCreatorUsersRoute
   '/_app/shariah/$symbol': typeof AppShariahSymbolRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/creator/content'
     | '/creator/revenue'
     | '/creator/settings'
+    | '/creator/shariah'
     | '/creator/stocks'
     | '/creator/users'
     | '/shariah/$symbol'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/creator/content'
     | '/creator/revenue'
     | '/creator/settings'
+    | '/creator/shariah'
     | '/creator/stocks'
     | '/creator/users'
     | '/shariah/$symbol'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/_app/creator/content'
     | '/_app/creator/revenue'
     | '/_app/creator/settings'
+    | '/_app/creator/shariah'
     | '/_app/creator/stocks'
     | '/_app/creator/users'
     | '/_app/shariah/$symbol'
@@ -552,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCreatorStocksRouteImport
       parentRoute: typeof AppCreatorRoute
     }
+    '/_app/creator/shariah': {
+      id: '/_app/creator/shariah'
+      path: '/shariah'
+      fullPath: '/creator/shariah'
+      preLoaderRoute: typeof AppCreatorShariahRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
     '/_app/creator/settings': {
       id: '/_app/creator/settings'
       path: '/settings'
@@ -612,6 +631,7 @@ interface AppCreatorRouteChildren {
   AppCreatorContentRoute: typeof AppCreatorContentRoute
   AppCreatorRevenueRoute: typeof AppCreatorRevenueRoute
   AppCreatorSettingsRoute: typeof AppCreatorSettingsRoute
+  AppCreatorShariahRoute: typeof AppCreatorShariahRoute
   AppCreatorStocksRoute: typeof AppCreatorStocksRoute
   AppCreatorUsersRoute: typeof AppCreatorUsersRoute
   AppCreatorIndexRoute: typeof AppCreatorIndexRoute
@@ -625,6 +645,7 @@ const AppCreatorRouteChildren: AppCreatorRouteChildren = {
   AppCreatorContentRoute: AppCreatorContentRoute,
   AppCreatorRevenueRoute: AppCreatorRevenueRoute,
   AppCreatorSettingsRoute: AppCreatorSettingsRoute,
+  AppCreatorShariahRoute: AppCreatorShariahRoute,
   AppCreatorStocksRoute: AppCreatorStocksRoute,
   AppCreatorUsersRoute: AppCreatorUsersRoute,
   AppCreatorIndexRoute: AppCreatorIndexRoute,
