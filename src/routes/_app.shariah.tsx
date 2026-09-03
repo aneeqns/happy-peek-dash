@@ -263,7 +263,8 @@ function ShariahPage() {
           <p className="py-6 text-center text-sm text-muted-foreground">No securities match those filters.</p>
         )}
       </div>
-      )
+      )}
+
 
       <GlassCard className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/5" glow="violet">
         <SectionTitle icon={<Info className="h-3.5 w-3.5" />}>What does “Shariah Compliant” mean?</SectionTitle>
