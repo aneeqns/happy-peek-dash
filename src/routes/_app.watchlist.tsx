@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GlassCard, PageHeader, Sparkline } from "@/components/ui-kit";
 import { fmt, initialWatchlist } from "@/lib/market-data";
+import { ShariahBadge } from "@/components/shariah-ui";
+import { statusOf } from "@/lib/shariah";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/watchlist")({
@@ -30,6 +32,9 @@ function WatchlistPage() {
                 <p className="truncate text-[11px] text-muted-foreground">{t.name}</p>
               </div>
               <Sparkline data={t.spark} />
+            </div>
+            <div className="mt-3">
+              <ShariahBadge status={statusOf(t.symbol)} />
             </div>
             <div className="mt-3 flex items-end justify-between">
               <p className="font-mono-nums text-lg">{fmt(t.price)}</p>

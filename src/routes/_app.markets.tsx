@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { GlassCard, PageHeader, Pill } from "@/components/ui-kit";
 import { fmt, marketUniverse, type MarketKind } from "@/lib/market-data";
+import { ShariahBadge } from "@/components/shariah-ui";
+import { statusOf } from "@/lib/shariah";
 import { cn } from "@/lib/utils";
 
 type Search = { q?: string };
@@ -29,6 +31,7 @@ function MarketsPage() {
   const { q } = Route.useSearch();
   const [query, setQuery] = useState(q ?? "");
   const [kind, setKind] = useState<MarketKind | "All">("All");
+  const [shariah, setShariah] = useState<"All" | "compliant" | "non_compliant" | "unavailable">("All");
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -36,9 +39,10 @@ function MarketsPage() {
       const matchesKind = kind === "All" || m.kind === kind;
       const matchesQuery =
         !needle || m.symbol.toLowerCase().includes(needle) || m.name.toLowerCase().includes(needle);
-      return matchesKind && matchesQuery;
+      const matchesShariah = shariah === "All" || statusOf(m.symbol) === shariah;
+      return matchesKind && matchesQuery && matchesShariah;
     });
-  }, [query, kind]);
+  }, [query, kind, shariah]);
 
   return (
     <div className="space-y-6">
@@ -72,6 +76,29 @@ function MarketsPage() {
           </div>
         </div>
 
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Shariah</span>
+          {([
+            ["All", "All"],
+            ["compliant", "🟢 Compliant"],
+            ["non_compliant", "🔴 Not compliant"],
+            ["unavailable", "🟡 Unavailable"],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setShariah(value)}
+              className={cn(
+                "rounded-full border px-3 py-1 text-xs transition",
+                shariah === value
+                  ? "border-emerald-400/60 bg-emerald-500/15 text-foreground"
+                  : "border-border text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
@@ -80,6 +107,7 @@ function MarketsPage() {
                 <th className="py-2">Name</th>
                 <th className="py-2">Type</th>
                 <th className="py-2">Region</th>
+                <th className="py-2">Shariah</th>
                 <th className="py-2 text-right">Price</th>
                 <th className="py-2 text-right">Change</th>
               </tr>
@@ -93,6 +121,9 @@ function MarketsPage() {
                     <Pill tone="info">{m.kind}</Pill>
                   </td>
                   <td className="py-2 text-xs text-muted-foreground">{m.region}</td>
+                  <td className="py-2">
+                    <ShariahBadge status={statusOf(m.symbol)} />
+                  </td>
                   <td className="py-2 text-right font-mono-nums">{fmt(m.price)}</td>
                   <td className={cn("py-2 text-right font-mono-nums", m.pct >= 0 ? "text-bull" : "text-bear")}>
                     {m.pct >= 0 ? "+" : ""}
