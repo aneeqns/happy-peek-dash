@@ -43,6 +43,8 @@ function ShariahPage() {
   const [sort, setSort] = useState<SortKey>("cap");
   const [showMethodology, setShowMethodology] = useState(false);
 
+  const hasCriteria = query.trim().length > 0 || market !== "All" || sector !== "All" || status !== "all";
+
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const byNeedle = (symbol: string, name: string, sec: string) =>
@@ -197,6 +199,15 @@ function ShariahPage() {
         </div>
       </GlassCard>
 
+      {!hasCriteria ? (
+        <GlassCard className="bg-gradient-to-br from-emerald-500/12 to-sky-500/5">
+          <p className="text-sm font-semibold">Search to see screening results</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Nothing is listed by default — Uptrend does not suggest investments here. Type a symbol, company or sector
+            above, or pick a market, industry or status filter, to see its Shariah screening result.
+          </p>
+        </GlassCard>
+      ) : (
       <div className="grid gap-3 lg:grid-cols-2">
         {rows.map((r) => (
           <GlassCard key={r.symbol} className="bg-gradient-to-br from-emerald-500/12 to-sky-500/5">
@@ -252,6 +263,7 @@ function ShariahPage() {
           <p className="py-6 text-center text-sm text-muted-foreground">No securities match those filters.</p>
         )}
       </div>
+      )
 
       <GlassCard className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/5" glow="violet">
         <SectionTitle icon={<Info className="h-3.5 w-3.5" />}>What does “Shariah Compliant” mean?</SectionTitle>
