@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
@@ -41,6 +42,11 @@ import { Route as AppCreatorAnnouncementsRouteImport } from './routes/_app.creat
 import { Route as AppCreatorAnalyticsRouteImport } from './routes/_app.creator.analytics'
 import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
 
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForbiddenRoute = ForbiddenRouteImport.update({
   id: '/forbidden',
   path: '/forbidden',
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/forbidden': typeof ForbiddenRoute
+  '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
   '/assistant': typeof AppAssistantRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/forbidden': typeof ForbiddenRoute
+  '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
   '/assistant': typeof AppAssistantRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/forbidden': typeof ForbiddenRoute
+  '/welcome': typeof WelcomeRoute
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/analytics': typeof AppAnalyticsRoute
   '/_app/assistant': typeof AppAssistantRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/forbidden'
+    | '/welcome'
     | '/alerts'
     | '/analytics'
     | '/assistant'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/forbidden'
+    | '/welcome'
     | '/alerts'
     | '/analytics'
     | '/assistant'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/forbidden'
+    | '/welcome'
     | '/_app/alerts'
     | '/_app/analytics'
     | '/_app/assistant'
@@ -397,12 +409,20 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   ForbiddenRoute: typeof ForbiddenRoute
+  WelcomeRoute: typeof WelcomeRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiCoachRoute: typeof ApiCoachRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forbidden': {
       id: '/forbidden'
       path: '/forbidden'
@@ -706,6 +726,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   ForbiddenRoute: ForbiddenRoute,
+  WelcomeRoute: WelcomeRoute,
   ApiChatRoute: ApiChatRoute,
   ApiCoachRoute: ApiCoachRoute,
 }
