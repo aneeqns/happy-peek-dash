@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type Role = "customer" | "creator";
+export type AccountMode = "demo" | "real";
 
 export type DemoUser = {
   id: string;
@@ -35,11 +36,13 @@ export const DEMO_ACCOUNTS: Record<Role, DemoUser> = {
   },
 };
 
-type Stored = { role: Role; viewAs: Role };
+type Stored = { mode: AccountMode; role: Role; viewAs: Role };
 
 type AuthValue = {
   /** Hydration flag — auth state is read from local storage on the client. */
   ready: boolean;
+  /** "demo" = mock workspace, "real" = a genuine signed-in account. */
+  mode: AccountMode | null;
   user: DemoUser | null;
   /** The real role of the signed-in account. Only a creator can be "creator". */
   role: Role | null;
@@ -50,27 +53,37 @@ type AuthValue = {
    */
   effectiveRole: Role | null;
   canSwitchRole: boolean;
+  /** Demo sign-in — no password, mock data only. */
   signIn: (role: Role) => void;
+  /** Marks the browser as holding a genuine account session. */
+  startRealSession: () => void;
   signOut: () => void;
   setViewAs: (role: Role) => void;
 };
 
 const AuthContext = createContext<AuthValue | null>(null);
 
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "U";
+  return (parts[0][0] + (parts[1]?.[0] ?? "")).toUpperCase();
+}
+
 /**
- * Reads the demo session outside React — used by route guards in `beforeLoad`.
+ * Reads the session outside React — used by route guards in `beforeLoad`.
  * Client-only: protected layouts run with `ssr: false`.
  */
-export function readAuthSnapshot(): { role: Role; effectiveRole: Role } | null {
+export function readAuthSnapshot(): { mode: AccountMode; role: Role; effectiveRole: Role } | null {
   if (typeof localStorage === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<Stored>;
     if (parsed.role !== "customer" && parsed.role !== "creator") return null;
+    const mode: AccountMode = parsed.mode === "real" ? "real" : "demo";
     const effectiveRole: Role =
       parsed.role === "creator" ? (parsed.viewAs === "customer" ? "customer" : "creator") : "customer";
-    return { role: parsed.role, effectiveRole };
+    return { mode, role: parsed.role, effectiveRole };
   } catch {
     return null;
   }
@@ -78,17 +91,13 @@ export function readAuthSnapshot(): { role: Role; effectiveRole: Role } | null {
 
 function readStored(): Stored | null {
   const snap = readAuthSnapshot();
-  return snap ? { role: snap.role, viewAs: snap.effectiveRole } : null;
+  return snap ? { mode: snap.mode, role: snap.role, viewAs: snap.effectiveRole } : null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [state, setState] = useState<Stored | null>(null);
-
-  useEffect(() => {
-    setState(readStored());
-    setReady(true);
-  }, []);
+  const [realUser, setRealUser] = useState<DemoUser | null>(null);
 
   const persist = useCallback((next: Stored | null) => {
     setState(next);
@@ -100,27 +109,90 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /** Loads the signed-in account's profile for a real session. */
+  const loadRealUser = useCallback(async () => {
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data } = await supabase.auth.getUser();
+    const authUser = data.user;
+    if (!authUser) {
+      setRealUser(null);
+      return false;
+    }
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username, full_name, email, created_at")
+      .eq("id", authUser.id)
+      .maybeSingle();
+
+    const name =
+      profile?.full_name ||
+      profile?.username ||
+      (authUser.user_metadata?.["full_name"] as string | undefined) ||
+      (authUser.email ?? "").split("@")[0] ||
+      "Investor";
+
+    setRealUser({
+      id: authUser.id,
+      name,
+      email: profile?.email ?? authUser.email ?? "",
+      role: "customer",
+      plan: "Free",
+      joined: new Date(profile?.created_at ?? authUser.created_at ?? Date.now()).toLocaleDateString(undefined, {
+        month: "short",
+        year: "numeric",
+      }),
+      avatarInitials: initials(name),
+    });
+    return true;
+  }, []);
+
+  useEffect(() => {
+    const stored = readStored();
+    setState(stored);
+    if (stored?.mode === "real") {
+      loadRealUser()
+        .then((ok) => {
+          if (!ok) persist(null);
+        })
+        .finally(() => setReady(true));
+    } else {
+      setReady(true);
+    }
+  }, [loadRealUser, persist]);
+
   const value = useMemo<AuthValue>(() => {
-    const user = state ? DEMO_ACCOUNTS[state.role] : null;
-    const role = user?.role ?? null;
+    const isReal = state?.mode === "real";
+    const user = isReal ? realUser : state ? DEMO_ACCOUNTS[state.role] : null;
+    const role = state ? (isReal ? "customer" : state.role) : null;
     // Hard rule: a customer's effective role is always "customer".
     const effectiveRole: Role | null =
       role === "creator" ? (state?.viewAs === "customer" ? "customer" : "creator") : role;
 
     return {
       ready,
+      mode: state?.mode ?? null,
       user,
       role,
       effectiveRole,
       canSwitchRole: role === "creator",
-      signIn: (nextRole: Role) => persist({ role: nextRole, viewAs: nextRole }),
-      signOut: () => persist(null),
+      signIn: (nextRole: Role) => persist({ mode: "demo", role: nextRole, viewAs: nextRole }),
+      startRealSession: () => {
+        persist({ mode: "real", role: "customer", viewAs: "customer" });
+        void loadRealUser();
+      },
+      signOut: () => {
+        if (state?.mode === "real") {
+          void import("@/integrations/supabase/client").then(({ supabase }) => supabase.auth.signOut());
+        }
+        setRealUser(null);
+        persist(null);
+      },
       setViewAs: (nextRole: Role) => {
         if (role !== "creator") return; // customers can never change their role
-        persist({ role: "creator", viewAs: nextRole });
+        persist({ mode: "demo", role: "creator", viewAs: nextRole });
       },
     };
-  }, [ready, state, persist]);
+  }, [ready, state, realUser, persist, loadRealUser]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
