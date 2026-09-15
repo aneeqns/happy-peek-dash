@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
+import { Route as FinishSetupRouteImport } from './routes/finish-setup'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -50,6 +51,11 @@ const WelcomeRoute = WelcomeRouteImport.update({
 const ForbiddenRoute = ForbiddenRouteImport.update({
   id: '/forbidden',
   path: '/forbidden',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinishSetupRoute = FinishSetupRouteImport.update({
+  id: '/finish-setup',
+  path: '/finish-setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -205,6 +211,7 @@ const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
@@ -238,6 +245,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
@@ -272,6 +280,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
   '/_app/alerts': typeof AppAlertsRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/finish-setup'
     | '/forbidden'
     | '/welcome'
     | '/alerts'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/finish-setup'
     | '/forbidden'
     | '/welcome'
     | '/alerts'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/auth'
+    | '/finish-setup'
     | '/forbidden'
     | '/welcome'
     | '/_app/alerts'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  FinishSetupRoute: typeof FinishSetupRoute
   ForbiddenRoute: typeof ForbiddenRoute
   WelcomeRoute: typeof WelcomeRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -428,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/forbidden'
       fullPath: '/forbidden'
       preLoaderRoute: typeof ForbiddenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finish-setup': {
+      id: '/finish-setup'
+      path: '/finish-setup'
+      fullPath: '/finish-setup'
+      preLoaderRoute: typeof FinishSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -725,6 +745,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  FinishSetupRoute: FinishSetupRoute,
   ForbiddenRoute: ForbiddenRoute,
   WelcomeRoute: WelcomeRoute,
   ApiChatRoute: ApiChatRoute,
