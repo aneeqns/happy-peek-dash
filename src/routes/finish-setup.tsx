@@ -22,7 +22,7 @@ export const Route = createFileRoute("/finish-setup")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: FinishSetup;
+  component: FinishSetup,
 });
 
 const inputClass =
