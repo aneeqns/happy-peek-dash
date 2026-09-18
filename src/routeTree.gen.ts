@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as FinishSetupRouteImport } from './routes/finish-setup'
+import { Route as CreatorAccessRouteImport } from './routes/creator-access'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -56,6 +57,11 @@ const ForbiddenRoute = ForbiddenRouteImport.update({
 const FinishSetupRoute = FinishSetupRouteImport.update({
   id: '/finish-setup',
   path: '/finish-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorAccessRoute = CreatorAccessRouteImport.update({
+  id: '/creator-access',
+  path: '/creator-access',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -211,6 +217,7 @@ const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
@@ -280,6 +288,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
   '/welcome': typeof WelcomeRoute
@@ -316,6 +325,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
     | '/welcome'
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
     | '/welcome'
@@ -384,6 +395,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/auth'
+    | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
     | '/welcome'
@@ -420,6 +432,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CreatorAccessRoute: typeof CreatorAccessRoute
   FinishSetupRoute: typeof FinishSetupRoute
   ForbiddenRoute: typeof ForbiddenRoute
   WelcomeRoute: typeof WelcomeRoute
@@ -448,6 +461,13 @@ declare module '@tanstack/react-router' {
       path: '/finish-setup'
       fullPath: '/finish-setup'
       preLoaderRoute: typeof FinishSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-access': {
+      id: '/creator-access'
+      path: '/creator-access'
+      fullPath: '/creator-access'
+      preLoaderRoute: typeof CreatorAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -745,6 +765,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  CreatorAccessRoute: CreatorAccessRoute,
   FinishSetupRoute: FinishSetupRoute,
   ForbiddenRoute: ForbiddenRoute,
   WelcomeRoute: WelcomeRoute,
