@@ -165,7 +165,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthValue>(() => {
     const isReal = state?.mode === "real";
     const user = isReal ? realUser : state ? DEMO_ACCOUNTS[state.role] : null;
-    const role = state ? (isReal ? "customer" : state.role) : null;
+    // The stored role only drives what the interface offers. Creator *data* is
+    // gated server-side by the signed creator-code cookie, so a tampered
+    // local-storage value cannot reveal anything.
+    const role = state ? state.role : null;
     // Hard rule: a customer's effective role is always "customer".
     const effectiveRole: Role | null =
       role === "creator" ? (state?.viewAs === "customer" ? "customer" : "creator") : role;
@@ -179,8 +182,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       canSwitchRole: role === "creator",
       signIn: (nextRole: Role) => persist({ mode: "demo", role: nextRole, viewAs: nextRole }),
       startRealSession: () => {
-        persist({ mode: "real", role: "customer", viewAs: "customer" });
+        // Keep an already-unlocked creator role across reloads.
+        const keepRole: Role = state?.mode === "real" && state.role === "creator" ? "creator" : "customer";
+        persist({ mode: "real", role: keepRole, viewAs: keepRole === "creator" ? state?.viewAs ?? "creator" : "customer" });
         void loadRealUser();
+      },
+      grantCreator: () => {
+        persist({ mode: state?.mode ?? "real", role: "creator", viewAs: "creator" });
       },
       signOut: () => {
         if (state?.mode === "real") {
@@ -191,7 +199,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       setViewAs: (nextRole: Role) => {
         if (role !== "creator") return; // customers can never change their role
-        persist({ mode: "demo", role: "creator", viewAs: nextRole });
+        persist({ mode: state?.mode ?? "demo", role: "creator", viewAs: nextRole });
       },
     };
   }, [ready, state, realUser, persist, loadRealUser]);
