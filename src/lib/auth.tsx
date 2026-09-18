@@ -57,6 +57,8 @@ type AuthValue = {
   signIn: (role: Role) => void;
   /** Marks the browser as holding a genuine account session. */
   startRealSession: () => void;
+  /** Called after the private creator code is verified server-side. */
+  grantCreator: () => void;
   signOut: () => void;
   setViewAs: (role: Role) => void;
 };
