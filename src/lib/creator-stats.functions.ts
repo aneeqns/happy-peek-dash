@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { hasCreatorPass } from "./creator-access.functions";
 
 export type CreatorStats = {
   totalUsers: number;
@@ -14,6 +13,7 @@ export type CreatorStats = {
 
 /** Real platform figures, readable only with a valid creator pass. */
 export const getCreatorStats = createServerFn({ method: "GET" }).handler(async (): Promise<CreatorStats> => {
+  const { hasCreatorPass } = await import("./creator-access.server");
   if (!(await hasCreatorPass())) throw new Error("Forbidden");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
