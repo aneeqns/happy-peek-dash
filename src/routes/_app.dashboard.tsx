@@ -3,6 +3,7 @@ import { Activity, ArrowUpRight, Sparkles, TrendingUp, Wallet } from "lucide-rea
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartLegend, ChartTooltip, GlassCard, Kpi, PageHeader, Pill, SectionTitle, Sparkline } from "@/components/ui-kit";
 import { aiRecommendations, chartData, fmt, fmtCompact, initialWatchlist, news, portfolio, sectorData } from "@/lib/market-data";
+import { useQuotes } from "@/lib/useQuotes";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
