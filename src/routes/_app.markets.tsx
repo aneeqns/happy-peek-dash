@@ -4,6 +4,7 @@ import { GlassCard, PageHeader, Pill } from "@/components/ui-kit";
 import { fmt, marketUniverse, type MarketKind } from "@/lib/market-data";
 import { ShariahBadge } from "@/components/shariah-ui";
 import { statusOf } from "@/lib/shariah";
+import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
 
 type Search = { q?: string };
@@ -33,7 +34,7 @@ function MarketsPage() {
   const [kind, setKind] = useState<MarketKind | "All">("All");
   const [shariah, setShariah] = useState<"All" | "compliant" | "non_compliant" | "unavailable">("All");
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return marketUniverse.filter((m) => {
       const matchesKind = kind === "All" || m.kind === kind;
@@ -43,6 +44,15 @@ function MarketsPage() {
       return matchesKind && matchesQuery && matchesShariah;
     });
   }, [query, kind, shariah]);
+
+  // Live prices for whatever is on screen; anything the feed misses keeps its own figure.
+  const symbols = useMemo(() => filtered.slice(0, 60).map((m) => m.symbol), [filtered]);
+  const { quotes, error: quoteError, updatedAt } = useQuotes(symbols);
+
+  const rows = filtered.map((m) => {
+    const q = quotes.get(m.symbol);
+    return q ? { ...m, price: q.price, pct: q.changePct, live: true } : { ...m, live: false };
+  });
 
   return (
     <div className="space-y-6">
