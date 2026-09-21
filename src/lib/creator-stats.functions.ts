@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { hasCreatorPass } from "./creator-access.functions";
 
 export type CreatorStats = {
   totalUsers: number;
