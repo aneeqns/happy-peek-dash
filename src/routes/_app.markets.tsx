@@ -109,6 +109,14 @@ function MarketsPage() {
           ))}
         </div>
 
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          {quoteError
+            ? quoteError
+            : updatedAt
+              ? `Live prices (slightly delayed) · updated ${new Date(updatedAt).toLocaleTimeString()}`
+              : "Fetching live prices…"}
+        </p>
+
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>

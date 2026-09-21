@@ -3,6 +3,7 @@ import { GlassCard, PageHeader, Sparkline } from "@/components/ui-kit";
 import { fmt, initialWatchlist } from "@/lib/market-data";
 import { ShariahBadge } from "@/components/shariah-ui";
 import { statusOf } from "@/lib/shariah";
+import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/watchlist")({
