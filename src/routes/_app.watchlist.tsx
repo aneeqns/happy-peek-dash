@@ -21,11 +21,20 @@ export const Route = createFileRoute("/_app/watchlist")({
 });
 
 function WatchlistPage() {
+  const { quotes, error, updatedAt } = useQuotes(initialWatchlist.map((t) => t.symbol));
+  const rows = initialWatchlist.map((t) => {
+    const q = quotes.get(t.symbol);
+    return q ? { ...t, price: q.price, change: q.change, changePct: q.changePct } : t;
+  });
+
   return (
     <div className="space-y-6">
       <PageHeader title="Watchlist" subtitle="Everything you follow, with trend at a glance." accent="from-emerald-400 via-lime-400 to-amber-400" />
+      <p className="text-[11px] text-muted-foreground">
+        {error ? error : updatedAt ? `Live prices (slightly delayed) · updated ${new Date(updatedAt).toLocaleTimeString()}` : "Fetching live prices…"}
+      </p>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {initialWatchlist.map((t) => (
+        {rows.map((t) => (
           <GlassCard key={t.symbol} className="bg-gradient-to-br from-emerald-500/15 to-lime-500/5">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
