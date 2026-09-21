@@ -20,6 +20,13 @@ export const Route = createFileRoute("/_app/dashboard")({
 });
 
 function DashboardPage() {
+  const top = initialWatchlist.slice(0, 5);
+  const { quotes } = useQuotes(top.map((t) => t.symbol));
+  const watch = top.map((t) => {
+    const q = quotes.get(t.symbol);
+    return q ? { ...t, price: q.price, changePct: q.changePct } : t;
+  });
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -64,7 +71,7 @@ function DashboardPage() {
             Watchlist
           </SectionTitle>
           <ul className="space-y-2">
-            {initialWatchlist.slice(0, 5).map((t) => (
+            {watch.map((t) => (
               <li key={t.symbol} className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/60 px-3 py-2">
                 <div className="min-w-0 flex-1">
                   <p className="font-mono-nums text-sm font-semibold">{t.symbol}</p>
