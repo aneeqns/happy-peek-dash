@@ -331,10 +331,23 @@ function RealAccount({ onBack }: { onBack: () => void }) {
 function DemoAccount({ onBack }: { onBack: () => void }) {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const enter = (r: Role) => {
-    signIn(r);
-    navigate({ to: r === "creator" ? "/creator" : "/dashboard", replace: true });
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name.trim().length < 2) {
+      setError("Please enter a name of at least 2 characters.");
+      return;
+    }
+    if (!emailSchema.safeParse(email.trim()).success) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    setError(null);
+    signIn("customer" as Role);
+    navigate({ to: "/dashboard", replace: true });
   };
 
   return (
@@ -343,28 +356,43 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
         <ArrowLeft className="h-3.5 w-3.5" /> Back
       </button>
 
-      <h2 className="text-lg font-semibold">Demo workspace</h2>
+      <h2 className="text-lg font-semibold">Demo login</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Sample data only — no real money, no bank details and nothing saved to an account.
+        Sign in to the demo workspace. Sample data only — no real money, no bank details and nothing saved.
       </p>
 
-      <div className="mt-5 space-y-3">
-        <button
-          onClick={() => enter("customer")}
-          className="flex w-full items-center gap-4 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-500/20 to-lime-500/5 p-4 text-left transition hover:scale-[1.01] hover:border-emerald-400"
-        >
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500/20 text-emerald-300">
-            <User className="h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-semibold">Demo as Customer</span>
-            <span className="block text-xs text-muted-foreground">
-              Dashboard, markets, portfolio, watchlists, alerts and UpBot
-            </span>
-          </span>
-        </button>
-      </div>
+      <form onSubmit={submit} className="mt-5 space-y-3">
+        <label className="block text-sm">
+          Your name
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Alex Morgan"
+            className={inputClass}
+          />
+        </label>
 
+        <label className="block text-sm">
+          Email
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className={inputClass}
+          />
+        </label>
+
+        {error && <p className="text-xs text-rose-400">{error}</p>}
+
+        <button
+          type="submit"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          <User className="h-4 w-4" /> Enter demo workspace
+        </button>
+      </form>
     </GlassCard>
   );
 }
+
