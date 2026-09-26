@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard, PageHeader, Pill } from "@/components/ui-kit";
-import { contentItems } from "@/lib/admin-data";
+import { EmptyState, PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_app/creator/content")({
   head: () => ({
@@ -16,18 +15,8 @@ export const Route = createFileRoute("/_app/creator/content")({
   }),
   component: () => (
     <div className="space-y-6">
-      <PageHeader title="Content Management" subtitle="News, banners, featured lists and insights published to customers." accent="from-fuchsia-400 via-violet-400 to-sky-400" />
-      <div className="grid gap-3 lg:grid-cols-2">
-        {contentItems.map((c) => (
-          <GlassCard key={c.id} className="bg-gradient-to-br from-fuchsia-500/15 to-violet-500/5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold">{c.title}</p>
-              <Pill tone={c.status === "Published" ? "bull" : c.status === "Draft" ? "neutral" : "warn"}>{c.status}</Pill>
-            </div>
-            <p className="mt-1 text-[11px] text-muted-foreground">{c.type} · {c.author} · updated {c.updated}</p>
-          </GlassCard>
-        ))}
-      </div>
+      <PageHeader title="Content" subtitle="Only real, published items appear here." />
+      <EmptyState title="Nothing published yet" hint="No content have been created on Uptrend so far." />
     </div>
   ),
 });

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard, PageHeader, Pill } from "@/components/ui-kit";
-import { auditLog } from "@/lib/admin-data";
+import { useCreatorDirectory } from "@/lib/useCreatorDirectory";
+import { EmptyState, GlassCard, PageHeader, Pill, SectionTitle, ChartTooltip } from "@/components/ui-kit";
+import { fmt } from "@/lib/market-data";
 
 export const Route = createFileRoute("/_app/creator/audit")({
   head: () => ({
@@ -14,20 +15,25 @@ export const Route = createFileRoute("/_app/creator/audit")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => (
-    <div className="space-y-6">
-      <PageHeader title="Audit Logs" subtitle="Every administrative action, who performed it and when." accent="from-fuchsia-400 via-violet-400 to-sky-400" />
-      <div className="grid gap-3 lg:grid-cols-2">
-        {auditLog.map((l) => (
-          <GlassCard key={l.id} className="bg-gradient-to-br from-sky-500/15 to-indigo-500/5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm">{l.action}</p>
-              <Pill tone={l.severity === "critical" ? "bear" : l.severity === "warn" ? "warn" : "info"}>{l.severity}</Pill>
-            </div>
-            <p className="mt-1 text-[11px] text-muted-foreground">{l.actor} · {l.target} · {l.at}</p>
-          </GlassCard>
-        ))}
-      </div>
-    </div>
-  ),
+  component: CreatorAudit,
 });
+
+function CreatorAudit() {
+  const q = useCreatorDirectory();
+  if (q.isLoading) return <EmptyState title="Loading real data…" />;
+  if (q.error || !q.data) return <EmptyState title="Could not load data" hint={q.error ? String((q.error as Error).message) : undefined} />;
+  const d = q.data;
+  return (
+    <div className="space-y-6">
+      <PageHeader title="Audit Log" subtitle="Real account events recorded in the database." accent="from-violet-400 via-sky-400 to-emerald-400" />
+      <GlassCard>
+        {d.events.length === 0 ? <EmptyState title="No events yet" /> : (
+        <ul className="divide-y divide-border/40 text-sm">{d.events.map((e, i) => (
+          <li key={i} className="flex items-center justify-between gap-3 py-2">
+            <span><Pill tone="info">{e.kind}</Pill> <span className="ml-2">{e.detail}</span></span>
+            <span className="text-xs text-muted-foreground">{new Date(e.at).toLocaleString()}</span>
+          </li>))}</ul>)}
+      </GlassCard>
+    </div>
+  );
+}

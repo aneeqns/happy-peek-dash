@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard, PageHeader, Pill } from "@/components/ui-kit";
-import { moderationQueue } from "@/lib/admin-data";
+import { EmptyState, PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_app/creator/ai")({
   head: () => ({
@@ -16,19 +15,8 @@ export const Route = createFileRoute("/_app/creator/ai")({
   }),
   component: () => (
     <div className="space-y-6">
-      <PageHeader title="AI Management" subtitle="Moderation queue and UpBot recommendation oversight." accent="from-fuchsia-400 via-violet-400 to-sky-400" />
-      <div className="grid gap-3 lg:grid-cols-2">
-        {moderationQueue.map((m) => (
-          <GlassCard key={m.id} className="bg-gradient-to-br from-rose-500/15 to-fuchsia-500/5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold">{m.user}</p>
-              <Pill tone="bear">{m.flag}</Pill>
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">“{m.excerpt}”</p>
-            <p className="mt-1 text-[10px] text-muted-foreground">{m.at}</p>
-          </GlassCard>
-        ))}
-      </div>
+      <PageHeader title="AI Management" subtitle="Only real data is shown here." />
+      <EmptyState title="No flagged conversations" hint="Nothing has been reported for review yet." />
     </div>
   ),
 });
