@@ -363,22 +363,8 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
             </span>
           </span>
         </button>
-
-        <button
-          onClick={() => enter("creator")}
-          className="flex w-full items-center gap-4 rounded-2xl border border-violet-500/40 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/5 p-4 text-left transition hover:scale-[1.01] hover:border-violet-400"
-        >
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-violet-500/20 text-violet-300">
-            <ShieldCheck className="h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-semibold">Demo as Creator (Admin)</span>
-            <span className="block text-xs text-muted-foreground">
-              Everything above, plus platform admin tools and a role switcher
-            </span>
-          </span>
-        </button>
       </div>
+
     </GlassCard>
   );
 }
