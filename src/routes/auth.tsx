@@ -115,7 +115,15 @@ function ChoiceScreen({ onPick }: { onPick: (s: Screen) => void }) {
           </span>
         </button>
       </div>
+
+      <div className="mt-5 flex items-center justify-end gap-1.5 border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
+        <span>By continuing you agree to our</span>
+        <Link to="/terms" className="font-semibold text-emerald-300 underline underline-offset-4 hover:text-emerald-200">
+          Terms &amp; Conditions
+        </Link>
+      </div>
     </GlassCard>
+
   );
 }
 
