@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ForbiddenRouteImport } from './routes/forbidden'
 import { Route as FinishSetupRouteImport } from './routes/finish-setup'
 import { Route as CreatorAccessRouteImport } from './routes/creator-access'
@@ -47,6 +48,11 @@ import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForbiddenRoute = ForbiddenRouteImport.update({
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/alerts': typeof AppAlertsRoute
   '/analytics': typeof AppAnalyticsRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/creator-access': typeof CreatorAccessRoute
   '/finish-setup': typeof FinishSetupRoute
   '/forbidden': typeof ForbiddenRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/analytics': typeof AppAnalyticsRoute
@@ -328,6 +337,7 @@ export interface FileRouteTypes {
     | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
+    | '/terms'
     | '/welcome'
     | '/alerts'
     | '/analytics'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
+    | '/terms'
     | '/welcome'
     | '/alerts'
     | '/analytics'
@@ -398,6 +409,7 @@ export interface FileRouteTypes {
     | '/creator-access'
     | '/finish-setup'
     | '/forbidden'
+    | '/terms'
     | '/welcome'
     | '/_app/alerts'
     | '/_app/analytics'
@@ -435,6 +447,7 @@ export interface RootRouteChildren {
   CreatorAccessRoute: typeof CreatorAccessRoute
   FinishSetupRoute: typeof FinishSetupRoute
   ForbiddenRoute: typeof ForbiddenRoute
+  TermsRoute: typeof TermsRoute
   WelcomeRoute: typeof WelcomeRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiCoachRoute: typeof ApiCoachRoute
@@ -447,6 +460,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forbidden': {
@@ -768,6 +788,7 @@ const rootRouteChildren: RootRouteChildren = {
   CreatorAccessRoute: CreatorAccessRoute,
   FinishSetupRoute: FinishSetupRoute,
   ForbiddenRoute: ForbiddenRoute,
+  TermsRoute: TermsRoute,
   WelcomeRoute: WelcomeRoute,
   ApiChatRoute: ApiChatRoute,
   ApiCoachRoute: ApiCoachRoute,

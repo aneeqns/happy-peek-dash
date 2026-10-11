@@ -8,3 +8,5 @@
 - [x] Portfolio shows the customer's own holdings with live prices (add / remove)
 - [x] Creator dashboard shows real platform figures (sign-ups, investors, most-held symbols)
 - [x] Live market prices on Markets, Watchlist and Dashboard
+- [x] Terms & Conditions page, linked from the bottom right of the start screen
+
