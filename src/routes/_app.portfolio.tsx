@@ -62,7 +62,7 @@ function PortfolioPage() {
     <div className="space-y-8">
       <PageHeader
         title="Portfolio"
-        subtitle={isReal ? "Your own holdings, valued with live market prices." : "Demo holdings — sample data, no real money."}
+        subtitle={isReal ? "Your own holdings, valued with live market prices." : "Demo account — real live prices, pretend money you chose."}
         accent="from-emerald-400 via-teal-400 to-sky-400"
         actions={
           <button
@@ -90,11 +90,20 @@ function PortfolioPage() {
           delta={cost > 0 ? `${((pl / cost) * 100).toFixed(2)}%` : undefined}
           tint="violet"
         />
-        <Kpi label="Holdings" value={String(priced.length)} delta={updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString()}` : undefined} tint="amber" />
+        {isReal || !wallet ? (
+          <Kpi label="Holdings" value={String(priced.length)} delta={updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString()}` : undefined} tint="amber" />
+        ) : (
+          <Kpi
+            label="Virtual cash"
+            value={`$${fmt(wallet.cash)}`}
+            delta={`Total ${fmt(wallet.cash + invested)} of $${fmt(wallet.startingCash, 0)} start`}
+            tint="amber"
+          />
+        )}
       </div>
 
       <GlassCard className="bg-gradient-to-br from-cyan-500/15 to-emerald-500/5" glow="emerald">
-        <SectionTitle>{isReal ? "Your holdings" : "Open positions (demo)"}</SectionTitle>
+        <SectionTitle>{isReal ? "Your holdings" : "Your demo positions (pretend money, real prices)"}</SectionTitle>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[620px] text-sm">
             <thead>
@@ -143,7 +152,7 @@ function PortfolioPage() {
         </div>
       </GlassCard>
 
-      {isReal && <AddHoldingCard />}
+      {isReal ? <AddHoldingCard /> : <DemoTradeCard />}
 
       <PortfolioInsights positions={priced.map((p) => ({ symbol: p.symbol, qty: p.quantity, avg: p.avg, price: p.price }))} />
 
