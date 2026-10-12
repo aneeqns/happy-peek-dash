@@ -7,7 +7,9 @@ import { PortfolioInsights } from "@/components/PortfolioInsights";
 import { GlassCard, Kpi, PageHeader, Pill, ProgressBar, SectionTitle } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { addHolding, deleteHolding, listHoldings } from "@/lib/holdings.functions";
-import { fmt, goals, positions as demoPositions } from "@/lib/market-data";
+import { fmt, goals } from "@/lib/market-data";
+import { buyDemo, createDemoWallet, sellDemo, useDemoWallet, DEMO_AMOUNT_PRESETS } from "@/lib/demo-wallet";
+import { getQuotes } from "@/lib/quotes.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
 
@@ -36,17 +38,18 @@ function PortfolioPage() {
     enabled: isReal,
   });
 
+  const wallet = useDemoWallet();
+
   const rows = useMemo(() => {
-    if (!isReal) return demoPositions.map((p) => ({ id: p.symbol, symbol: p.symbol, quantity: p.qty, avg: p.avg }));
+    if (!isReal) return (wallet?.holdings ?? []).map((h) => ({ id: h.symbol, symbol: h.symbol, quantity: h.quantity, avg: h.avgCost }));
     return (holdingsQuery.data ?? []).map((h) => ({ id: h.id, symbol: h.symbol, quantity: h.quantity, avg: h.avg_cost }));
-  }, [isReal, holdingsQuery.data]);
+  }, [isReal, holdingsQuery.data, wallet]);
 
   const { quotes, error: quoteError, updatedAt, refetch } = useQuotes(rows.map((r) => r.symbol));
 
   const priced = rows.map((r) => {
     const q = quotes.get(r.symbol);
-    const fallback = demoPositions.find((p) => p.symbol === r.symbol)?.price ?? r.avg;
-    const price = q?.price ?? fallback;
+    const price = q?.price ?? r.avg;
     return { ...r, price, live: Boolean(q), changePct: q?.changePct ?? 0 };
   });
 
@@ -59,7 +62,7 @@ function PortfolioPage() {
     <div className="space-y-8">
       <PageHeader
         title="Portfolio"
-        subtitle={isReal ? "Your own holdings, valued with live market prices." : "Demo holdings — sample data, no real money."}
+        subtitle={isReal ? "Your own holdings, valued with live market prices." : "Demo account — real live prices, pretend money you chose."}
         accent="from-emerald-400 via-teal-400 to-sky-400"
         actions={
           <button
@@ -87,11 +90,20 @@ function PortfolioPage() {
           delta={cost > 0 ? `${((pl / cost) * 100).toFixed(2)}%` : undefined}
           tint="violet"
         />
-        <Kpi label="Holdings" value={String(priced.length)} delta={updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString()}` : undefined} tint="amber" />
+        {isReal || !wallet ? (
+          <Kpi label="Holdings" value={String(priced.length)} delta={updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString()}` : undefined} tint="amber" />
+        ) : (
+          <Kpi
+            label="Virtual cash"
+            value={`$${fmt(wallet.cash)}`}
+            delta={`Total ${fmt(wallet.cash + invested)} of $${fmt(wallet.startingCash, 0)} start`}
+            tint="amber"
+          />
+        )}
       </div>
 
       <GlassCard className="bg-gradient-to-br from-cyan-500/15 to-emerald-500/5" glow="emerald">
-        <SectionTitle>{isReal ? "Your holdings" : "Open positions (demo)"}</SectionTitle>
+        <SectionTitle>{isReal ? "Your holdings" : "Your demo positions (pretend money, real prices)"}</SectionTitle>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[620px] text-sm">
             <thead>
@@ -140,7 +152,7 @@ function PortfolioPage() {
         </div>
       </GlassCard>
 
-      {isReal && <AddHoldingCard />}
+      {isReal ? <AddHoldingCard /> : <DemoTradeCard />}
 
       <PortfolioInsights positions={priced.map((p) => ({ symbol: p.symbol, qty: p.quantity, avg: p.avg, price: p.price }))} />
 

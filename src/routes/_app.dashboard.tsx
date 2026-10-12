@@ -4,6 +4,8 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Too
 import { ChartLegend, ChartTooltip, GlassCard, Kpi, PageHeader, Pill, SectionTitle, Sparkline } from "@/components/ui-kit";
 import { aiRecommendations, chartData, fmt, fmtCompact, initialWatchlist, news, portfolio, sectorData } from "@/lib/market-data";
 import { useQuotes } from "@/lib/useQuotes";
+import { useAuth } from "@/lib/auth";
+import { useDemoWallet } from "@/lib/demo-wallet";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
@@ -21,7 +23,14 @@ export const Route = createFileRoute("/_app/dashboard")({
 
 function DashboardPage() {
   const top = initialWatchlist.slice(0, 5);
-  const { quotes } = useQuotes(top.map((t) => t.symbol));
+  const { mode } = useAuth();
+  const wallet = useDemoWallet();
+  const demo = mode !== "real" && wallet;
+  const held = demo ? wallet.holdings : [];
+  const { quotes } = useQuotes([...top.map((t) => t.symbol), ...held.map((h) => h.symbol)]);
+  const heldValue = held.reduce((s, h) => s + h.quantity * (quotes.get(h.symbol)?.price ?? h.avgCost), 0);
+  const heldDay = held.reduce((s, h) => { const q = quotes.get(h.symbol); return s + (q ? (h.quantity * q.price * q.changePct) / 100 : 0); }, 0);
+  const inProfit = held.filter((h) => (quotes.get(h.symbol)?.price ?? h.avgCost) > h.avgCost).length;
   const watch = top.map((t) => {
     const q = quotes.get(t.symbol);
     return q ? { ...t, price: q.price, changePct: q.changePct } : t;
@@ -36,10 +45,21 @@ function DashboardPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {demo ? (
+          <>
+            <Kpi label="Demo account value" value={`$${fmt(wallet.cash + heldValue)}`} delta={`${heldDay >= 0 ? "+" : "-"}$${fmt(Math.abs(heldDay))} today · pretend money`} tint="emerald" icon={<Wallet className="h-4 w-4" />} />
+            <Kpi label="Virtual cash" value={`$${fmt(wallet.cash)}`} delta={`Started with $${fmt(wallet.startingCash, 0)}`} tint="sky" icon={<Activity className="h-4 w-4" />} />
+            <Kpi label="Total return" value={`${(((wallet.cash + heldValue) / wallet.startingCash - 1) * 100).toFixed(2)}%`} delta="Real live prices" tint="violet" icon={<TrendingUp className="h-4 w-4" />} />
+            <Kpi label="Open positions" value={String(held.length)} delta={`${inProfit} in profit`} tint="amber" icon={<ArrowUpRight className="h-4 w-4" />} />
+          </>
+        ) : (
+          <>
         <Kpi label="Portfolio value" value={`$${fmt(portfolio.value)}`} delta={`+$${fmt(portfolio.change)} (+${portfolio.changePct}%)`} tint="emerald" icon={<Wallet className="h-4 w-4" />} />
         <Kpi label="Buying power" value={`$${fmt(portfolio.buyingPower)}`} delta={`Cash $${fmt(portfolio.cash)}`} tint="sky" icon={<Activity className="h-4 w-4" />} />
         <Kpi label="Win rate" value={`${portfolio.winRate}%`} delta="+2.1% vs last month" tint="violet" icon={<TrendingUp className="h-4 w-4" />} />
         <Kpi label="Open positions" value="5" delta="3 in profit" tint="amber" icon={<ArrowUpRight className="h-4 w-4" />} />
+          </>
+        )}
       </div>
 
       <section className="grid gap-4 lg:grid-cols-3">
