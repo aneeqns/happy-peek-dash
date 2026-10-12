@@ -7,6 +7,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 import { accountSetupState, emailSchema, passwordSchema, usernameSchema } from "@/lib/account";
 import { useAuth, type Role } from "@/lib/auth";
+import { createDemoWallet, DEMO_AMOUNT_PRESETS, DEMO_MAX, DEMO_MIN } from "@/lib/demo-wallet";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -341,6 +342,7 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [amount, setAmount] = useState("10000");
   const [error, setError] = useState<string | null>(null);
 
   const submit = (e: React.FormEvent) => {
@@ -353,9 +355,15 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
       setError("Please enter a valid email address.");
       return;
     }
+    const amt = Number(amount);
+    if (!Number.isFinite(amt) || amt < DEMO_MIN || amt > DEMO_MAX) {
+      setError(`Choose a virtual amount between $${DEMO_MIN.toLocaleString()} and $${DEMO_MAX.toLocaleString()}.`);
+      return;
+    }
     setError(null);
+    createDemoWallet(Math.round(amt * 100) / 100);
     signIn("customer" as Role);
-    navigate({ to: "/dashboard", replace: true });
+    navigate({ to: "/portfolio", replace: true });
   };
 
   return (
@@ -366,7 +374,7 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
 
       <h2 className="text-lg font-semibold">Demo login</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Sign in to the demo workspace. Sample data only — no real money, no bank details and nothing saved.
+        Trade with real live market prices using pretend money. No real money, no bank details.
       </p>
 
       <form onSubmit={submit} className="mt-5 space-y-3">
@@ -390,6 +398,31 @@ function DemoAccount({ onBack }: { onBack: () => void }) {
             className={inputClass}
           />
         </label>
+
+        <div className="text-sm">
+          Virtual starting amount (pretend money)
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {DEMO_AMOUNT_PRESETS.map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setAmount(String(p))}
+                className={`rounded-lg border px-2.5 py-1 font-mono-nums text-xs transition ${
+                  Number(amount) === p ? "border-violet-400 bg-violet-500/20 text-foreground" : "border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                ${p.toLocaleString()}
+              </button>
+            ))}
+          </div>
+          <input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
+            inputMode="decimal"
+            placeholder="Or type any amount"
+            className={inputClass}
+          />
+        </div>
 
         {error && <p className="text-xs text-rose-400">{error}</p>}
 
