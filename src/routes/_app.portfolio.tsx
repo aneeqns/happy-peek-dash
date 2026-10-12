@@ -7,7 +7,9 @@ import { PortfolioInsights } from "@/components/PortfolioInsights";
 import { GlassCard, Kpi, PageHeader, Pill, ProgressBar, SectionTitle } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
 import { addHolding, deleteHolding, listHoldings } from "@/lib/holdings.functions";
-import { fmt, goals, positions as demoPositions } from "@/lib/market-data";
+import { fmt, goals } from "@/lib/market-data";
+import { buyDemo, createDemoWallet, sellDemo, useDemoWallet, DEMO_AMOUNT_PRESETS } from "@/lib/demo-wallet";
+import { getQuotes } from "@/lib/quotes.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
 
@@ -36,17 +38,18 @@ function PortfolioPage() {
     enabled: isReal,
   });
 
+  const wallet = useDemoWallet();
+
   const rows = useMemo(() => {
-    if (!isReal) return demoPositions.map((p) => ({ id: p.symbol, symbol: p.symbol, quantity: p.qty, avg: p.avg }));
+    if (!isReal) return (wallet?.holdings ?? []).map((h) => ({ id: h.symbol, symbol: h.symbol, quantity: h.quantity, avg: h.avgCost }));
     return (holdingsQuery.data ?? []).map((h) => ({ id: h.id, symbol: h.symbol, quantity: h.quantity, avg: h.avg_cost }));
-  }, [isReal, holdingsQuery.data]);
+  }, [isReal, holdingsQuery.data, wallet]);
 
   const { quotes, error: quoteError, updatedAt, refetch } = useQuotes(rows.map((r) => r.symbol));
 
   const priced = rows.map((r) => {
     const q = quotes.get(r.symbol);
-    const fallback = demoPositions.find((p) => p.symbol === r.symbol)?.price ?? r.avg;
-    const price = q?.price ?? fallback;
+    const price = q?.price ?? r.avg;
     return { ...r, price, live: Boolean(q), changePct: q?.changePct ?? 0 };
   });
 
