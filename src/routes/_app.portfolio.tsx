@@ -292,3 +292,80 @@ function AddHoldingCard() {
     </GlassCard>
   );
 }
+
+function DemoTradeCard() {
+  const wallet = useDemoWallet();
+  const fetchQuotes = useServerFn(getQuotes);
+  const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [custom, setCustom] = useState("");
+
+  if (!wallet) {
+    return (
+      <GlassCard className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/5" glow="violet">
+        <SectionTitle>Choose your pretend starting money</SectionTitle>
+        <div className="flex flex-wrap items-center gap-2">
+          {DEMO_AMOUNT_PRESETS.map((p) => (
+            <button key={p} onClick={() => createDemoWallet(p)} className="rounded-lg border border-border px-3 py-1.5 font-mono-nums text-xs hover:border-violet-400">
+              ${p.toLocaleString()}
+            </button>
+          ))}
+          <input value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))} placeholder="Custom amount" className="w-36 rounded-xl border border-border bg-surface px-3 py-1.5 text-sm" />
+          <button onClick={() => Number(custom) >= 100 && createDemoWallet(Number(custom))} className="rounded-xl bg-primary px-3 py-1.5 text-sm text-primary-foreground">Start</button>
+        </div>
+      </GlassCard>
+    );
+  }
+
+  const trade = async (side: "buy" | "sell") => {
+    setMsg(null);
+    const sym = symbol.trim().toUpperCase();
+    const qty = Number(quantity);
+    if (!sym || !(qty > 0)) return setMsg({ ok: false, text: "Enter a symbol and quantity." });
+    setBusy(true);
+    try {
+      const res = await fetchQuotes({ data: { symbols: [sym] } });
+      const q = res.quotes.find((x) => x.symbol === sym);
+      if (!q) return setMsg({ ok: false, text: `No live price found for ${sym}.` });
+      const err = side === "buy" ? buyDemo(sym, qty, q.price) : sellDemo(sym, qty, q.price);
+      setMsg(err ? { ok: false, text: err } : { ok: true, text: `${side === "buy" ? "Bought" : "Sold"} ${qty} ${sym} at $${fmt(q.price)} (live price).` });
+      if (!err) setQuantity("");
+    } catch {
+      setMsg({ ok: false, text: "Live prices are unavailable right now. Try again." });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <GlassCard className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/5" glow="violet">
+      <SectionTitle
+        right={
+          <button
+            onClick={() => {
+              const v = window.prompt("New pretend starting amount (this clears your demo positions):", String(wallet.startingCash));
+              if (v && Number(v) >= 100) createDemoWallet(Number(v));
+            }}
+            className="text-[10px] uppercase tracking-wider text-violet-300"
+          >
+            Change amount
+          </button>
+        }
+      >
+        Trade with pretend money
+      </SectionTitle>
+      <div className="flex flex-wrap items-center gap-2">
+        <input value={symbol} onChange={(e) => setSymbol(e.target.value.toUpperCase())} placeholder="Symbol (e.g. AAPL)" className="min-w-36 flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary/60" />
+        <input value={quantity} onChange={(e) => setQuantity(e.target.value)} inputMode="decimal" placeholder="Quantity" className="min-w-28 flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary/60" />
+        <button disabled={busy} onClick={() => void trade("buy")} className="rounded-xl bg-bull px-4 py-2 text-sm font-medium text-background disabled:opacity-50">Buy</button>
+        <button disabled={busy} onClick={() => void trade("sell")} className="rounded-xl bg-bear px-4 py-2 text-sm font-medium text-background disabled:opacity-50">Sell</button>
+      </div>
+      {msg && <p className={cn("mt-2 text-xs", msg.ok ? "text-bull" : "text-bear")}>{msg.text}</p>}
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        Orders fill at the real live market price. The money is pretend — available: ${fmt(wallet.cash)}.
+      </p>
+    </GlassCard>
+  );
+}
