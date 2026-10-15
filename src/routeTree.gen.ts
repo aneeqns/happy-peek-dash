@@ -9,69 +9,45 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppRouteImport } from './routes/_app'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CreatorAccessRouteImport } from './routes/creator-access'
-import { Route as FinishSetupRouteImport } from './routes/finish-setup'
-import { Route as ForbiddenRouteImport } from './routes/forbidden'
-import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WelcomeRouteImport } from './routes/welcome'
-import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
-import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
-import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
-import { Route as AppCoachRouteImport } from './routes/_app.coach'
-import { Route as AppCreatorRouteImport } from './routes/_app.creator'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppMarketsRouteImport } from './routes/_app.markets'
-import { Route as AppNewsRouteImport } from './routes/_app.news'
-import { Route as AppPortfolioRouteImport } from './routes/_app.portfolio'
-import { Route as AppProfileRouteImport } from './routes/_app.profile'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppShariahRouteImport } from './routes/_app.shariah'
-import { Route as AppWatchlistRouteImport } from './routes/_app.watchlist'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ForbiddenRouteImport } from './routes/forbidden'
+import { Route as FinishSetupRouteImport } from './routes/finish-setup'
+import { Route as CreatorAccessRouteImport } from './routes/creator-access'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiCoachRouteImport } from './routes/api/coach'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AppWatchlistRouteImport } from './routes/_app.watchlist'
+import { Route as AppShariahRouteImport } from './routes/_app.shariah'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppPortfolioRouteImport } from './routes/_app.portfolio'
+import { Route as AppNewsRouteImport } from './routes/_app.news'
+import { Route as AppMarketsRouteImport } from './routes/_app.markets'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCreatorRouteImport } from './routes/_app.creator'
+import { Route as AppCoachRouteImport } from './routes/_app.coach'
+import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
+import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppCreatorIndexRouteImport } from './routes/_app.creator.index'
-import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
-import { Route as AppCreatorAnalyticsRouteImport } from './routes/_app.creator.analytics'
-import { Route as AppCreatorAnnouncementsRouteImport } from './routes/_app.creator.announcements'
-import { Route as AppCreatorAuditRouteImport } from './routes/_app.creator.audit'
-import { Route as AppCreatorContentRouteImport } from './routes/_app.creator.content'
-import { Route as AppCreatorRevenueRouteImport } from './routes/_app.creator.revenue'
-import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
-import { Route as AppCreatorShariahRouteImport } from './routes/_app.creator.shariah'
-import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
-import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
 import { Route as AppShariahSymbolRouteImport } from './routes/_app.shariah.$symbol'
+import { Route as AppCreatorUsersRouteImport } from './routes/_app.creator.users'
+import { Route as AppCreatorStocksRouteImport } from './routes/_app.creator.stocks'
+import { Route as AppCreatorShariahRouteImport } from './routes/_app.creator.shariah'
+import { Route as AppCreatorSettingsRouteImport } from './routes/_app.creator.settings'
+import { Route as AppCreatorRevenueRouteImport } from './routes/_app.creator.revenue'
+import { Route as AppCreatorContentRouteImport } from './routes/_app.creator.content'
+import { Route as AppCreatorAuditRouteImport } from './routes/_app.creator.audit'
+import { Route as AppCreatorAnnouncementsRouteImport } from './routes/_app.creator.announcements'
+import { Route as AppCreatorAnalyticsRouteImport } from './routes/_app.creator.analytics'
+import { Route as AppCreatorAiRouteImport } from './routes/_app.creator.ai'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreatorAccessRoute = CreatorAccessRouteImport.update({
-  id: '/creator-access',
-  path: '/creator-access',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FinishSetupRoute = FinishSetupRouteImport.update({
-  id: '/finish-setup',
-  path: '/finish-setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForbiddenRoute = ForbiddenRouteImport.update({
-  id: '/forbidden',
-  path: '/forbidden',
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -79,79 +55,33 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
+const ForbiddenRoute = ForbiddenRouteImport.update({
+  id: '/forbidden',
+  path: '/forbidden',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppAlertsRoute = AppAlertsRouteImport.update({
-  id: '/alerts',
-  path: '/alerts',
-  getParentRoute: () => AppRoute,
+const FinishSetupRoute = FinishSetupRouteImport.update({
+  id: '/finish-setup',
+  path: '/finish-setup',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => AppRoute,
+const CreatorAccessRoute = CreatorAccessRouteImport.update({
+  id: '/creator-access',
+  path: '/creator-access',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppAssistantRoute = AppAssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
-  getParentRoute: () => AppRoute,
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppCoachRoute = AppCoachRouteImport.update({
-  id: '/coach',
-  path: '/coach',
-  getParentRoute: () => AppRoute,
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppCreatorRoute = AppCreatorRouteImport.update({
-  id: '/creator',
-  path: '/creator',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMarketsRoute = AppMarketsRouteImport.update({
-  id: '/markets',
-  path: '/markets',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppNewsRoute = AppNewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPortfolioRoute = AppPortfolioRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppShariahRoute = AppShariahRouteImport.update({
-  id: '/shariah',
-  path: '/shariah',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppWatchlistRoute = AppWatchlistRouteImport.update({
-  id: '/watchlist',
-  path: '/watchlist',
-  getParentRoute: () => AppRoute,
-} as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCoachRoute = ApiCoachRouteImport.update({
@@ -159,49 +89,89 @@ const ApiCoachRoute = ApiCoachRouteImport.update({
   path: '/api/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppWatchlistRoute = AppWatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppShariahRoute = AppShariahRouteImport.update({
+  id: '/shariah',
+  path: '/shariah',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPortfolioRoute = AppPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNewsRoute = AppNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketsRoute = AppMarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCreatorRoute = AppCreatorRouteImport.update({
+  id: '/creator',
+  path: '/creator',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCoachRoute = AppCoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssistantRoute = AppAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCreatorIndexRoute = AppCreatorIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppCreatorRoute,
 } as any)
-const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
-  getParentRoute: () => AppCreatorRoute,
+const AppShariahSymbolRoute = AppShariahSymbolRouteImport.update({
+  id: '/$symbol',
+  path: '/$symbol',
+  getParentRoute: () => AppShariahRoute,
 } as any)
-const AppCreatorAnalyticsRoute = AppCreatorAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorAnnouncementsRoute = AppCreatorAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorAuditRoute = AppCreatorAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorContentRoute = AppCreatorContentRouteImport.update({
-  id: '/content',
-  path: '/content',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorRevenueRoute = AppCreatorRevenueRouteImport.update({
-  id: '/revenue',
-  path: '/revenue',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorSettingsRoute = AppCreatorSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppCreatorRoute,
-} as any)
-const AppCreatorShariahRoute = AppCreatorShariahRouteImport.update({
-  id: '/shariah',
-  path: '/shariah',
+const AppCreatorUsersRoute = AppCreatorUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AppCreatorRoute,
 } as any)
 const AppCreatorStocksRoute = AppCreatorStocksRouteImport.update({
@@ -209,15 +179,45 @@ const AppCreatorStocksRoute = AppCreatorStocksRouteImport.update({
   path: '/stocks',
   getParentRoute: () => AppCreatorRoute,
 } as any)
-const AppCreatorUsersRoute = AppCreatorUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
+const AppCreatorShariahRoute = AppCreatorShariahRouteImport.update({
+  id: '/shariah',
+  path: '/shariah',
   getParentRoute: () => AppCreatorRoute,
 } as any)
-const AppShariahSymbolRoute = AppShariahSymbolRouteImport.update({
-  id: '/$symbol',
-  path: '/$symbol',
-  getParentRoute: () => AppShariahRoute,
+const AppCreatorSettingsRoute = AppCreatorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorRevenueRoute = AppCreatorRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorContentRoute = AppCreatorContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAuditRoute = AppCreatorAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnnouncementsRoute = AppCreatorAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAnalyticsRoute = AppCreatorAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppCreatorRoute,
+} as any)
+const AppCreatorAiRoute = AppCreatorAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppCreatorRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -455,46 +455,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/creator-access': {
-      id: '/creator-access'
-      path: '/creator-access'
-      fullPath: '/creator-access'
-      preLoaderRoute: typeof CreatorAccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/finish-setup': {
-      id: '/finish-setup'
-      path: '/finish-setup'
-      fullPath: '/finish-setup'
-      preLoaderRoute: typeof FinishSetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forbidden': {
-      id: '/forbidden'
-      path: '/forbidden'
-      fullPath: '/forbidden'
-      preLoaderRoute: typeof ForbiddenRouteImport
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -504,109 +469,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
+    '/forbidden': {
+      id: '/forbidden'
+      path: '/forbidden'
+      fullPath: '/forbidden'
+      preLoaderRoute: typeof ForbiddenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/alerts': {
-      id: '/_app/alerts'
-      path: '/alerts'
-      fullPath: '/alerts'
-      preLoaderRoute: typeof AppAlertsRouteImport
-      parentRoute: typeof AppRoute
+    '/finish-setup': {
+      id: '/finish-setup'
+      path: '/finish-setup'
+      fullPath: '/finish-setup'
+      preLoaderRoute: typeof FinishSetupRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/analytics': {
-      id: '/_app/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AppAnalyticsRouteImport
-      parentRoute: typeof AppRoute
+    '/creator-access': {
+      id: '/creator-access'
+      path: '/creator-access'
+      fullPath: '/creator-access'
+      preLoaderRoute: typeof CreatorAccessRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/assistant': {
-      id: '/_app/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AppAssistantRouteImport
-      parentRoute: typeof AppRoute
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/coach': {
-      id: '/_app/coach'
-      path: '/coach'
-      fullPath: '/coach'
-      preLoaderRoute: typeof AppCoachRouteImport
-      parentRoute: typeof AppRoute
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/creator': {
-      id: '/_app/creator'
-      path: '/creator'
-      fullPath: '/creator'
-      preLoaderRoute: typeof AppCreatorRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/markets': {
-      id: '/_app/markets'
-      path: '/markets'
-      fullPath: '/markets'
-      preLoaderRoute: typeof AppMarketsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/news': {
-      id: '/_app/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof AppNewsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/portfolio': {
-      id: '/_app/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof AppPortfolioRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/shariah': {
-      id: '/_app/shariah'
-      path: '/shariah'
-      fullPath: '/shariah'
-      preLoaderRoute: typeof AppShariahRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/watchlist': {
-      id: '/_app/watchlist'
-      path: '/watchlist'
-      fullPath: '/watchlist'
-      preLoaderRoute: typeof AppWatchlistRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/coach': {
@@ -616,6 +518,104 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCoachRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/watchlist': {
+      id: '/_app/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof AppWatchlistRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/shariah': {
+      id: '/_app/shariah'
+      path: '/shariah'
+      fullPath: '/shariah'
+      preLoaderRoute: typeof AppShariahRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/portfolio': {
+      id: '/_app/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AppPortfolioRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/news': {
+      id: '/_app/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof AppNewsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/markets': {
+      id: '/_app/markets'
+      path: '/markets'
+      fullPath: '/markets'
+      preLoaderRoute: typeof AppMarketsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/creator': {
+      id: '/_app/creator'
+      path: '/creator'
+      fullPath: '/creator'
+      preLoaderRoute: typeof AppCreatorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/coach': {
+      id: '/_app/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof AppCoachRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assistant': {
+      id: '/_app/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics': {
+      id: '/_app/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/creator/': {
       id: '/_app/creator/'
       path: '/'
@@ -623,60 +623,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCreatorIndexRouteImport
       parentRoute: typeof AppCreatorRoute
     }
-    '/_app/creator/ai': {
-      id: '/_app/creator/ai'
-      path: '/ai'
-      fullPath: '/creator/ai'
-      preLoaderRoute: typeof AppCreatorAiRouteImport
-      parentRoute: typeof AppCreatorRoute
+    '/_app/shariah/$symbol': {
+      id: '/_app/shariah/$symbol'
+      path: '/$symbol'
+      fullPath: '/shariah/$symbol'
+      preLoaderRoute: typeof AppShariahSymbolRouteImport
+      parentRoute: typeof AppShariahRoute
     }
-    '/_app/creator/analytics': {
-      id: '/_app/creator/analytics'
-      path: '/analytics'
-      fullPath: '/creator/analytics'
-      preLoaderRoute: typeof AppCreatorAnalyticsRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/announcements': {
-      id: '/_app/creator/announcements'
-      path: '/announcements'
-      fullPath: '/creator/announcements'
-      preLoaderRoute: typeof AppCreatorAnnouncementsRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/audit': {
-      id: '/_app/creator/audit'
-      path: '/audit'
-      fullPath: '/creator/audit'
-      preLoaderRoute: typeof AppCreatorAuditRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/content': {
-      id: '/_app/creator/content'
-      path: '/content'
-      fullPath: '/creator/content'
-      preLoaderRoute: typeof AppCreatorContentRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/revenue': {
-      id: '/_app/creator/revenue'
-      path: '/revenue'
-      fullPath: '/creator/revenue'
-      preLoaderRoute: typeof AppCreatorRevenueRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/settings': {
-      id: '/_app/creator/settings'
-      path: '/settings'
-      fullPath: '/creator/settings'
-      preLoaderRoute: typeof AppCreatorSettingsRouteImport
-      parentRoute: typeof AppCreatorRoute
-    }
-    '/_app/creator/shariah': {
-      id: '/_app/creator/shariah'
-      path: '/shariah'
-      fullPath: '/creator/shariah'
-      preLoaderRoute: typeof AppCreatorShariahRouteImport
+    '/_app/creator/users': {
+      id: '/_app/creator/users'
+      path: '/users'
+      fullPath: '/creator/users'
+      preLoaderRoute: typeof AppCreatorUsersRouteImport
       parentRoute: typeof AppCreatorRoute
     }
     '/_app/creator/stocks': {
@@ -686,19 +644,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCreatorStocksRouteImport
       parentRoute: typeof AppCreatorRoute
     }
-    '/_app/creator/users': {
-      id: '/_app/creator/users'
-      path: '/users'
-      fullPath: '/creator/users'
-      preLoaderRoute: typeof AppCreatorUsersRouteImport
+    '/_app/creator/shariah': {
+      id: '/_app/creator/shariah'
+      path: '/shariah'
+      fullPath: '/creator/shariah'
+      preLoaderRoute: typeof AppCreatorShariahRouteImport
       parentRoute: typeof AppCreatorRoute
     }
-    '/_app/shariah/$symbol': {
-      id: '/_app/shariah/$symbol'
-      path: '/$symbol'
-      fullPath: '/shariah/$symbol'
-      preLoaderRoute: typeof AppShariahSymbolRouteImport
-      parentRoute: typeof AppShariahRoute
+    '/_app/creator/settings': {
+      id: '/_app/creator/settings'
+      path: '/settings'
+      fullPath: '/creator/settings'
+      preLoaderRoute: typeof AppCreatorSettingsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/revenue': {
+      id: '/_app/creator/revenue'
+      path: '/revenue'
+      fullPath: '/creator/revenue'
+      preLoaderRoute: typeof AppCreatorRevenueRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/content': {
+      id: '/_app/creator/content'
+      path: '/content'
+      fullPath: '/creator/content'
+      preLoaderRoute: typeof AppCreatorContentRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/audit': {
+      id: '/_app/creator/audit'
+      path: '/audit'
+      fullPath: '/creator/audit'
+      preLoaderRoute: typeof AppCreatorAuditRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/announcements': {
+      id: '/_app/creator/announcements'
+      path: '/announcements'
+      fullPath: '/creator/announcements'
+      preLoaderRoute: typeof AppCreatorAnnouncementsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/analytics': {
+      id: '/_app/creator/analytics'
+      path: '/analytics'
+      fullPath: '/creator/analytics'
+      preLoaderRoute: typeof AppCreatorAnalyticsRouteImport
+      parentRoute: typeof AppCreatorRoute
+    }
+    '/_app/creator/ai': {
+      id: '/_app/creator/ai'
+      path: '/ai'
+      fullPath: '/creator/ai'
+      preLoaderRoute: typeof AppCreatorAiRouteImport
+      parentRoute: typeof AppCreatorRoute
     }
   }
 }
