@@ -9,4 +9,6 @@
 - [x] Creator dashboard shows real platform figures (sign-ups, investors, most-held symbols)
 - [x] Live market prices on Markets, Watchlist and Dashboard
 - [x] Terms & Conditions page, linked from the bottom right of the start screen
+- [x] Demo account: real market prices, user-chosen pretend money, buy/sell from the wallet
+- [x] Publish to a permanent public link anyone can open
 
