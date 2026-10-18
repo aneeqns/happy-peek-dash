@@ -1,6 +1,12 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
 import { REQUEST_LIMITS, sameOriginRequest, validCreatorExpiry } from './security-rules';
 import { chatRequestSchema, coachRequestSchema, quoteRequestSchema } from './ai-request-schemas';
+
+const expect = (actual: unknown) => ({
+  toBe: (expected: unknown) => assert.equal(actual, expected),
+  toEqual: (expected: unknown) => assert.deepEqual(actual, expected),
+});
 
 describe('public request protection', () => {
   test('rejects cross-site and missing-origin requests', () => {
