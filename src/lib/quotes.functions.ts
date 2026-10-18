@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { quoteRequestSchema } from './ai-request-schemas';
 
 export type Quote = {
   symbol: string;
@@ -54,6 +55,7 @@ function appSymbol(provider: string) {
 async function fetchChunk(symbols: string[]): Promise<Quote[]> {
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(","))}`;
   const res = await fetch(url, {
+    signal: AbortSignal.timeout(10000),
     headers: {
       // The public endpoint rejects requests without a browser-like agent.
       "User-Agent": "Mozilla/5.0 (compatible; UptrendApp/1.0)",
@@ -88,10 +90,11 @@ async function fetchChunk(symbols: string[]): Promise<Quote[]> {
  * for anything missing so the UI never breaks when the feed is unavailable.
  */
 export const getQuotes = createServerFn({ method: "POST" })
-  .inputValidator((data: { symbols: string[] }) => ({
-    symbols: Array.from(new Set((data?.symbols ?? []).map((s) => String(s).trim()).filter(Boolean))).slice(0, 80),
-  }))
+  .inputValidator(quoteRequestSchema)
   .handler(async ({ data }) => {
+    const { enforcePublicQuota } = await import('./request-security.server');
+    const denied = await enforcePublicQuota('quotes');
+    if (denied) return { quotes: [] as Quote[], error: 'Quote request limit reached or request blocked.', at: Date.now() };
     if (data.symbols.length === 0) return { quotes: [] as Quote[], error: null as string | null, at: Date.now() };
     const mapped = data.symbols.map(providerSymbol);
     try {

@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireCreatorIdentity } from './creator-auth';
 
 export type CreatorStats = {
   totalUsers: number;
@@ -21,9 +22,9 @@ function dayKey(iso: string) {
 }
 
 /** Real platform figures, readable only with a valid creator pass. */
-export const getCreatorStats = createServerFn({ method: "GET" }).handler(async (): Promise<CreatorStats> => {
+export const getCreatorStats = createServerFn({ method: "GET" }).middleware([requireCreatorIdentity]).handler(async ({ context }): Promise<CreatorStats> => {
   const { hasCreatorPass } = await import("./creator-access.server");
-  if (!(await hasCreatorPass())) throw new Error("Forbidden");
+  if (!(await hasCreatorPass(context.userId))) throw new Error("Forbidden");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   const now = Date.now();

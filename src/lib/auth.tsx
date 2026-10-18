@@ -191,6 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         persist({ mode: state?.mode ?? "real", role: "creator", viewAs: "creator" });
       },
       signOut: () => {
+        void import('@/lib/creator-access.functions').then(({ lockCreator }) => lockCreator()).catch(() => {});
         if (state?.mode === "real") {
           void import("@/integrations/supabase/client").then(({ supabase }) => supabase.auth.signOut());
         }

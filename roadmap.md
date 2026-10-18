@@ -11,4 +11,8 @@
 - [x] Terms & Conditions page, linked from the bottom right of the start screen
 - [x] Demo account: real market prices, user-chosen pretend money, buy/sell from the wallet
 - [x] Publish to a permanent public link anyone can open
+- [x] Run security scans and verify published protections
+- [x] Fix verified security issues and run regression checks
+- [ ] Publish security fixes — awaiting an explicit republish request
+- [ ] Verify signed-in Creator access — awaiting a confirmed owner account and private code
 
