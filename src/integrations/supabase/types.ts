@@ -107,12 +107,51 @@ export type Database = {
         }
         Relationships: []
       }
+      request_limits: {
+        Row: {
+          bucket: string
+          expires_at: string
+          hits: number
+        }
+        Insert: {
+          bucket: string
+          expires_at: string
+          hits?: number
+        }
+        Update: {
+          bucket?: string
+          expires_at?: string
+          hits?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_request_quota: {
+        Args: { p_bucket: string; p_limit: number; p_window_seconds: number }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

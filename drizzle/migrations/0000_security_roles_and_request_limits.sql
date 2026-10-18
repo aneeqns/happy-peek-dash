@@ -1,0 +1,17 @@
+CREATE TABLE public.user_roles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL, role text NOT NULL CHECK (role IN ('creator','customer')), UNIQUE(user_id,role));
+GRANT SELECT ON public.user_roles TO authenticated;
+GRANT ALL ON public.user_roles TO service_role;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY read_own_roles ON public.user_roles FOR SELECT TO authenticated USING (auth.uid()=user_id);
+INSERT INTO public.user_roles(user_id,role) SELECT id,'creator' FROM auth.users WHERE lower(email)='cuteaneeq@gmail.com' AND email_confirmed_at IS NOT NULL;
+CREATE FUNCTION public.assign_verified_creator() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF lower(NEW.email)='cuteaneeq@gmail.com' AND NEW.email_confirmed_at IS NOT NULL THEN INSERT INTO public.user_roles(user_id,role) VALUES(NEW.id,'creator') ON CONFLICT DO NOTHING; END IF; RETURN NEW; END; $$;
+REVOKE ALL ON FUNCTION public.assign_verified_creator() FROM PUBLIC,anon,authenticated;
+CREATE TRIGGER assign_verified_creator AFTER INSERT OR UPDATE OF email,email_confirmed_at ON auth.users FOR EACH ROW EXECUTE FUNCTION public.assign_verified_creator();
+CREATE TABLE public.request_limits (bucket text PRIMARY KEY, hits integer NOT NULL DEFAULT 0, expires_at timestamptz NOT NULL);
+GRANT ALL ON public.request_limits TO service_role;
+ALTER TABLE public.request_limits ENABLE ROW LEVEL SECURITY;
+CREATE FUNCTION public.consume_request_quota(p_bucket text,p_limit integer,p_window_seconds integer) RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ DECLARE v_hits integer; BEGIN INSERT INTO public.request_limits(bucket,hits,expires_at) VALUES(p_bucket,1,now()+make_interval(secs=>p_window_seconds)) ON CONFLICT(bucket) DO UPDATE SET hits=CASE WHEN request_limits.expires_at<=now() THEN 1 ELSE request_limits.hits+1 END, expires_at=CASE WHEN request_limits.expires_at<=now() THEN now()+make_interval(secs=>p_window_seconds) ELSE request_limits.expires_at END RETURNING hits INTO v_hits; RETURN v_hits<=p_limit; END; $$;
+REVOKE ALL ON FUNCTION public.consume_request_quota(text,integer,integer) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.consume_request_quota(text,integer,integer) TO service_role;
+REVOKE ALL ON public.profiles,public.bank_accounts,public.holdings FROM anon;
+REVOKE TRUNCATE,REFERENCES,TRIGGER ON public.profiles,public.bank_accounts,public.holdings FROM authenticated;
