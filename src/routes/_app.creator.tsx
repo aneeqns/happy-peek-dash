@@ -7,8 +7,10 @@ export const Route = createFileRoute("/_app/creator")({
   // server-side through an HttpOnly signed cookie (local storage can't fake it).
   beforeLoad: async () => {
     const session = readAuthSnapshot();
-    if (!session) throw redirect({ to: "/auth" });
-    const { granted } = await creatorAccessStatus();
+    if (!session || session.mode !== 'real') throw redirect({ to: "/auth" });
+    let granted = false;
+    try { granted = (await creatorAccessStatus()).granted; }
+    catch { throw redirect({ to: '/forbidden' }); }
     if (!granted) throw redirect({ to: "/creator-access" });
   },
   component: () => <Outlet />,

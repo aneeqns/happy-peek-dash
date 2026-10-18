@@ -1,4 +1,5 @@
 import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
+import { validCreatorExpiry } from './security-rules';
 
 const COOKIE = "uptrend_creator";
 const MAX_AGE_SECONDS = 60 * 60 * 12;
@@ -22,7 +23,9 @@ function readCookie(name: string) {
   const raw = getRequestHeader("cookie") ?? "";
   for (const part of raw.split(";")) {
     const [k, ...v] = part.trim().split("=");
-    if (k === name) return decodeURIComponent(v.join("="));
+    if (k === name) {
+      try { return decodeURIComponent(v.join("=")); } catch { return null; }
+    }
   }
   return null;
 }
@@ -38,26 +41,29 @@ function timingSafeEqual(a: string, b: string) {
  * Server-only guard shared by every creator data function.
  * Returns true when the browser carries a valid, unexpired creator pass.
  */
-export async function hasCreatorPass(): Promise<boolean> {
+export async function hasCreatorPass(userId?: string): Promise<boolean> {
+  if (!userId) return false;
   const secret = process.env["SESSION_SECRET"];
   if (!secret) return false;
   const cookie = readCookie(COOKIE);
   if (!cookie) return false;
-  const [expRaw, mac] = cookie.split(".");
-  if (!expRaw || !mac) return false;
-  const exp = Number(expRaw);
-  if (!Number.isFinite(exp) || exp < Date.now()) return false;
-  return timingSafeEqual(mac, await sign(expRaw, secret));
+  const [owner, expRaw, mac, extra] = cookie.split(".");
+  if (owner !== userId || !expRaw || !mac || extra || !validCreatorExpiry(expRaw)) return false;
+  return timingSafeEqual(mac, await sign(`${owner}.${expRaw}`, secret));
 }
 
-export async function readCreatorAccessStatus() {
+export async function readCreatorAccessStatus(userId: string) {
   return {
-    granted: await hasCreatorPass(),
+    granted: await hasCreatorPass(userId),
     configured: Boolean(process.env["CREATOR_ACCESS_CODE"]),
   };
 }
 
-export async function verifyCreatorCode(code: string) {
+export async function verifyCreatorCode(code: string, userId: string) {
+  const { consumeQuota } = await import('./request-security.server');
+  if (!(await consumeQuota(`creator:${userId}`, 5, 900))) {
+    return { granted: false, error: 'Too many attempts. Try again in 15 minutes.' };
+  }
   const expected = process.env["CREATOR_ACCESS_CODE"];
   const secret = process.env["SESSION_SECRET"];
   if (!expected || !secret) {
@@ -70,7 +76,8 @@ export async function verifyCreatorCode(code: string) {
     return { granted: false, error: "That code is not correct." as string | null };
   }
   const exp = String(Date.now() + MAX_AGE_SECONDS * 1000);
-  const value = `${exp}.${await sign(exp, secret)}`;
+  const payload = `${userId}.${exp}`;
+  const value = `${payload}.${await sign(payload, secret)}`;
   setResponseHeader(
     "Set-Cookie",
     `${COOKIE}=${encodeURIComponent(value)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}`,

@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireCreatorIdentity } from './creator-auth';
 
 export type CreatorDirectory = {
   users: { id: string; email: string; username: string | null; fullName: string | null; createdAt: string; hasBank: boolean; holdings: number; invested: number }[];
@@ -10,9 +11,9 @@ export type CreatorDirectory = {
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 /** Real user directory and activity, readable only with a valid creator pass. */
-export const getCreatorDirectory = createServerFn({ method: "GET" }).handler(async (): Promise<CreatorDirectory> => {
+export const getCreatorDirectory = createServerFn({ method: "GET" }).middleware([requireCreatorIdentity]).handler(async ({ context }): Promise<CreatorDirectory> => {
   const { hasCreatorPass } = await import("./creator-access.server");
-  if (!(await hasCreatorPass())) throw new Error("Forbidden");
+  if (!(await hasCreatorPass(context.userId))) throw new Error("Forbidden");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   const [p, b, h] = await Promise.all([
