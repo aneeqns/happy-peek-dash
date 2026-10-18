@@ -3,6 +3,7 @@ import { convertToModelMessages, stepCountIs, streamText, tool, type UIMessage }
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { buildSeries } from "@/lib/chart-tool";
+import { chatRequestSchema } from '@/lib/ai-request-schemas';
 
 const SYSTEM_PROMPT = `You are Uptrend AI, an investing research copilot inside a stock market dashboard.
 
@@ -24,38 +25,47 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { messages } = (await request.json()) as ChatRequestBody;
-        if (!Array.isArray(messages)) {
-          return new Response("Messages are required", { status: 400 });
-        }
+        const { enforcePublicQuota, readLimitedJson } = await import('@/lib/request-security.server');
+        try {
+          const denied = await enforcePublicQuota('ai', request);
+          if (denied) return denied;
+        } catch { return new Response('Request protection is temporarily unavailable.', { status: 503 }); }
+        let messages: UIMessage[];
+        try {
+          const parsed = chatRequestSchema.parse(await readLimitedJson(request, 64000));
+          messages = parsed.messages as UIMessage[];
+        } catch { return new Response('Invalid or oversized chat request.', { status: 400 }); }
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
-          return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+          return new Response("AI is temporarily unavailable.", { status: 503 });
         }
 
         const gateway = createLovableAiGatewayProvider(key);
         const model = gateway("google/gemini-3-flash-preview");
 
+        try {
         const result = streamText({
           model,
           system: SYSTEM_PROMPT,
           messages: await convertToModelMessages(messages as UIMessage[]),
-          stopWhen: stepCountIs(50),
+          stopWhen: stepCountIs(4),
+          maxOutputTokens: 2000,
+          abortSignal: AbortSignal.timeout(60000),
           tools: {
             show_chart: tool({
               description:
                 "Render an interactive chart in the chat for a ticker, index or theme. Use for any request to see a chart, graph, trend, performance or comparison.",
               inputSchema: z.object({
-                symbol: z.string().describe("Ticker or short label, e.g. NVDA, SPY, Energy"),
-                title: z.string().optional().describe("Short chart title"),
+                symbol: z.string().max(32).describe("Ticker or short label, e.g. NVDA, SPY, Energy"),
+                title: z.string().max(120).optional().describe("Short chart title"),
                 timeframe: z
                   .enum(["1D", "1W", "1M", "6M", "1Y", "5Y"])
                   .optional()
                   .describe("Time window, defaults to 1Y"),
                 kind: z.enum(["line", "bar"]).optional().describe("line for price trends, bar for discrete comparisons"),
                 trend: z.enum(["up", "down", "flat"]).optional().describe("Overall direction of the illustrative series"),
-                unit: z.string().optional().describe("Value prefix, e.g. $ or %"),
+                unit: z.string().max(12).optional().describe("Value prefix, e.g. $ or %"),
               }),
               execute: async (input) => buildSeries(input),
             }),
@@ -64,7 +74,13 @@ export const Route = createFileRoute("/api/chat")({
 
         return result.toUIMessageStreamResponse({
           originalMessages: messages as UIMessage[],
+          headers: { 'Cache-Control': 'private, no-store' },
+          onError: () => 'AI is temporarily unavailable. Please try again.',
         });
+        } catch (error) {
+          console.error('[chat] request failed', error);
+          return new Response('AI is temporarily unavailable. Please try again.', { status: 503 });
+        }
       },
     },
   },
