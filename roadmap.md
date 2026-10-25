@@ -13,6 +13,6 @@
 - [x] Publish to a permanent public link anyone can open
 - [x] Run security scans and verify published protections
 - [x] Fix verified security issues and run regression checks
-- [ ] Publish security fixes — awaiting an explicit republish request
+- [x] Publish security fixes to the public site
 - [ ] Verify signed-in Creator access — awaiting a confirmed owner account and private code
 
