@@ -15,4 +15,7 @@
 - [x] Fix verified security issues and run regression checks
 - [x] Publish security fixes to the public site
 - [ ] Verify signed-in Creator access — awaiting a confirmed owner account and private code
+- [ ] Deep code-level security review of account, database, AI and request boundaries
+- [ ] Fix deeper review findings and run security regression checks
+- [ ] Publish deeper security fixes — awaiting explicit republish request
 
