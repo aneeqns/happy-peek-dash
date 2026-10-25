@@ -69,9 +69,10 @@
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
     "vite-tsconfig-paths": "^6.0.2",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "overrides": {
+    "zod": "^4.6.6",
     "source-map-js": "^1.2.2",
     "browserslist": "^4.29.3",
     "js-yaml": "^4.3.2",
