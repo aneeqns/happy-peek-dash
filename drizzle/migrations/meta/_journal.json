@@ -8,6 +8,13 @@
       "when": 1792312070379,
       "tag": "0000_security_roles_and_request_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792915317909,
+      "tag": "0001_restrict_security_table_grants",
+      "breakpoints": true
     }
   ]
 }
