@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Bell, BellRing, Plus, Trash2, TrendingDown, TrendingUp, Newspaper, Zap } from "lucide-react";
+import { useAuth } from '@/lib/auth';
+import { alertStorageKey } from '@/lib/private-storage';
 
 type Condition = "above" | "below" | "change" | "news";
 type Alert = {
@@ -21,10 +23,10 @@ const SEED: Alert[] = [
   { id: "s4", symbol: "SPY", condition: "news", value: 0, active: true, createdAt: Date.now() - 3600_000 },
 ];
 
-function loadAlerts(): Alert[] {
+function loadAlerts(storageKey: string): Alert[] {
   if (typeof window === "undefined") return SEED;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return SEED;
     const parsed = JSON.parse(raw) as Alert[];
     return Array.isArray(parsed) ? parsed : SEED;
@@ -34,25 +36,28 @@ function loadAlerts(): Alert[] {
 }
 
 export function SmartAlerts() {
+  const { mode, user } = useAuth();
+  const storageKey = alertStorageKey(mode, user?.id);
   const [alerts, setAlerts] = useState<Alert[]>(SEED);
-  const [hydrated, setHydrated] = useState(false);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [symbol, setSymbol] = useState("");
   const [condition, setCondition] = useState<Condition>("above");
   const [value, setValue] = useState("");
 
   useEffect(() => {
-    setAlerts(loadAlerts());
-    setHydrated(true);
-  }, []);
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* unavailable */ }
+    setAlerts(storageKey ? loadAlerts(storageKey) : []);
+    setLoadedKey(storageKey);
+  }, [storageKey]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!storageKey || loadedKey !== storageKey) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(alerts));
+      window.localStorage.setItem(storageKey, JSON.stringify(alerts));
     } catch {
       /* noop */
     }
-  }, [alerts, hydrated]);
+  }, [alerts, loadedKey, storageKey]);
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +85,8 @@ export function SmartAlerts() {
   const remove = (id: string) => setAlerts((prev) => prev.filter((a) => a.id !== id));
 
   const activeCount = alerts.filter((a) => a.active).length;
+
+  if (!storageKey || loadedKey !== storageKey) return null;
 
   return (
     <section id="alerts" className="mt-6 scroll-mt-24">

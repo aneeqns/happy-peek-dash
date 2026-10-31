@@ -55,6 +55,7 @@ function appSymbol(provider: string) {
 async function fetchChunk(symbols: string[]): Promise<Quote[]> {
   const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(","))}`;
   const res = await fetch(url, {
+    redirect: 'error',
     signal: AbortSignal.timeout(10000),
     headers: {
       // The public endpoint rejects requests without a browser-like agent.

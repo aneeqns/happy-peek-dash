@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 export const requireCreatorIdentity = createMiddleware({ type: 'function' })
   .middleware([requireSupabaseAuth])
   .server(async ({ context, next }) => {
+    if (!context.claims.email || !context.claims.email_verified) throw new Error('Forbidden');
     const { data, error } = await context.supabase.from('user_roles')
       .select('role').eq('user_id', context.userId).eq('role', 'creator').maybeSingle();
     if (error || !data) throw new Error('Forbidden');
