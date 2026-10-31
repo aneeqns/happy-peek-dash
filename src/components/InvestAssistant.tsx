@@ -21,7 +21,21 @@ export function InvestAssistant() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      prepareSendMessagesRequest: ({ messages }) => ({
+        body: {
+          messages: messages.map((message) => ({
+            id: message.id,
+            role: message.role,
+            // Charts stay in the UI, never replay client-provided tool evidence.
+            parts: message.parts.filter((part) => part.type === 'text')
+              .map((part) => ({ type: 'text', text: part.text }))
+              .filter((part) => part.text.length > 0),
+          })).filter((message) => message.parts.length > 0),
+        },
+      }),
+    }),
   });
 
   const isLoading = status === "submitted" || status === "streaming";

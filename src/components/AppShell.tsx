@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { Pill } from "@/components/ui-kit";
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, effectiveRole } = useAuth();
+  const { user, effectiveRole, ready, mode } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -29,6 +29,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   const isCreatorView = effectiveRole === "creator";
+
+  if (!ready || !mode || !user) return null;
 
   return (
     <div className="min-h-screen bg-background">

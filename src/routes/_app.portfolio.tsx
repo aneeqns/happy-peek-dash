@@ -28,14 +28,14 @@ export const Route = createFileRoute("/_app/portfolio")({
 });
 
 function PortfolioPage() {
-  const { mode } = useAuth();
+  const { mode, user } = useAuth();
   const isReal = mode === "real";
 
   const fetchHoldings = useServerFn(listHoldings);
   const holdingsQuery = useQuery({
-    queryKey: ["holdings"],
+    queryKey: ["holdings", user?.id],
     queryFn: () => fetchHoldings(),
-    enabled: isReal,
+    enabled: isReal && Boolean(user?.id),
   });
 
   const wallet = useDemoWallet();

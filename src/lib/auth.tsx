@@ -1,4 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { lockCreator } from './creator-access.functions';
 
 export type Role = "customer" | "creator";
 export type AccountMode = "demo" | "real";
@@ -97,11 +100,14 @@ function readStored(): Stored | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [ready, setReady] = useState(false);
   const [state, setState] = useState<Stored | null>(null);
   const [realUser, setRealUser] = useState<DemoUser | null>(null);
 
   const persist = useCallback((next: Stored | null) => {
+    void queryClient.cancelQueries();
+    queryClient.clear();
     setState(next);
     try {
       if (next) localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
@@ -109,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       /* storage unavailable — session stays in memory */
     }
-  }, []);
+  }, [queryClient]);
 
   /** Loads the signed-in account's profile for a real session. */
   const loadRealUser = useCallback(async () => {
@@ -162,6 +168,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [loadRealUser, persist]);
 
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setRealUser(null);
+        if (readAuthSnapshot()?.mode === 'real') persist(null);
+      }
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        void queryClient.cancelQueries();
+        queryClient.clear();
+        setRealUser(null);
+        // Defer auth API work outside the auth event callback.
+        setTimeout(() => { void loadRealUser(); }, 0);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [persist, queryClient, loadRealUser]);
+
   const value = useMemo<AuthValue>(() => {
     const isReal = state?.mode === "real";
     const user = isReal ? realUser : state ? DEMO_ACCOUNTS[state.role] : null;
@@ -191,12 +214,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         persist({ mode: state?.mode ?? "real", role: "creator", viewAs: "creator" });
       },
       signOut: () => {
-        void import('@/lib/creator-access.functions').then(({ lockCreator }) => lockCreator()).catch(() => {});
-        if (state?.mode === "real") {
-          void import("@/integrations/supabase/client").then(({ supabase }) => supabase.auth.signOut());
-        }
         setRealUser(null);
         persist(null);
+        void (async () => {
+          await Promise.allSettled([
+            lockCreator(),
+            supabase.auth.signOut({ scope: 'local' }),
+          ]);
+          window.location.replace('/auth');
+        })();
       },
       setViewAs: (nextRole: Role) => {
         if (role !== "creator") return; // customers can never change their role
