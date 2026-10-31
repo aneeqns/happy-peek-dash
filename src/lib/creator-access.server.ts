@@ -49,7 +49,12 @@ export async function hasCreatorPass(userId?: string): Promise<boolean> {
   if (!cookie) return false;
   const [owner, expRaw, mac, extra] = cookie.split(".");
   if (owner !== userId || !expRaw || !mac || extra || !validCreatorExpiry(expRaw)) return false;
-  return timingSafeEqual(mac, await sign(`${owner}.${expRaw}`, secret));
+  if (!timingSafeEqual(mac, await sign(`${owner}.${expRaw}`, secret))) return false;
+  const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+  const { data, error } = await supabaseAdmin.from('creator_passes')
+    .select('token_hash').eq('token_hash', mac).eq('user_id', userId)
+    .gt('expires_at', new Date().toISOString()).maybeSingle();
+  return !error && Boolean(data);
 }
 
 export async function readCreatorAccessStatus(userId: string) {
@@ -78,6 +83,11 @@ export async function verifyCreatorCode(code: string, userId: string) {
   const exp = String(Date.now() + MAX_AGE_SECONDS * 1000);
   const payload = `${userId}.${exp}`;
   const value = `${payload}.${await sign(payload, secret)}`;
+  const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+  const { error } = await supabaseAdmin.from('creator_passes').insert({
+    token_hash: value.split('.')[2], user_id: userId, expires_at: new Date(Number(exp)).toISOString(),
+  });
+  if (error) return { granted: false, error: 'Creator access is temporarily unavailable.' };
   setResponseHeader(
     "Set-Cookie",
     `${COOKIE}=${encodeURIComponent(value)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}`,
@@ -85,6 +95,16 @@ export async function verifyCreatorCode(code: string, userId: string) {
   return { granted: true, error: null as string | null };
 }
 
-export function clearCreatorCookie() {
+export async function clearCreatorCookie() {
+  const cookie = readCookie(COOKIE);
+  if (cookie) {
+    const [owner, expRaw, mac, extra] = cookie.split('.');
+    const secret = process.env['SESSION_SECRET'];
+    if (owner && expRaw && mac && !extra && secret && timingSafeEqual(mac, await sign(`${owner}.${expRaw}`, secret))) {
+      const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+      const { error } = await supabaseAdmin.from('creator_passes').delete().eq('token_hash', mac).eq('user_id', owner);
+      if (error) throw new Error('Unable to revoke Creator access. Please try again.');
+    }
+  }
   setResponseHeader("Set-Cookie", `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);
 }

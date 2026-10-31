@@ -47,6 +47,24 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_passes: {
+        Row: {
+          expires_at: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          expires_at: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       holdings: {
         Row: {
           avg_cost: number

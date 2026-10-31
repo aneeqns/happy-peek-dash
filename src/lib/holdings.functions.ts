@@ -12,6 +12,8 @@ export type Holding = {
 export const listHoldings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { setResponseHeader } = await import('@tanstack/react-start/server');
+    setResponseHeader('Cache-Control', 'private, no-store');
     const { data, error } = await context.supabase
       .from("holdings")
       .select("id, symbol, quantity, avg_cost, note")

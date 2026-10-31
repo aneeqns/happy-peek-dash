@@ -17,6 +17,7 @@ import { ChartTooltip, GlassCard, Kpi, PageHeader, SectionTitle } from "@/compon
 import { getCreatorStats } from "@/lib/creator-stats.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { fmt, fmtCompact } from "@/lib/market-data";
+import { useAuth } from '@/lib/auth';
 
 export const Route = createFileRoute("/_app/creator/")({
   head: () => ({
@@ -34,9 +35,11 @@ export const Route = createFileRoute("/_app/creator/")({
 });
 
 function CreatorHome() {
+  const { user, mode, effectiveRole } = useAuth();
   const fetchStats = useServerFn(getCreatorStats);
   const { data, isLoading, error } = useQuery({
-    queryKey: ["creator-stats"],
+    queryKey: ["creator-stats", user?.id],
+    enabled: mode === 'real' && effectiveRole === 'creator' && Boolean(user?.id),
     queryFn: () => fetchStats(),
     refetchInterval: 60_000,
   });

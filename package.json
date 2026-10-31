@@ -72,6 +72,7 @@
     "zod": "^4.6.7"
   },
   "overrides": {
+    "seroval": "^1.6.11",
     "zod": "^4.6.6",
     "source-map-js": "^1.2.2",
     "browserslist": "^4.29.3",

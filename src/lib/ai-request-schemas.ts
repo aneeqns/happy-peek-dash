@@ -10,7 +10,10 @@ export const chatRequestSchema = z.object({
   messages: z.array(z.object({
     id: z.string().max(200),
     role: z.enum(['user', 'assistant']),
-    parts: z.array(z.record(z.string(), z.unknown())).max(20),
+    parts: z.array(z.object({
+      type: z.literal('text'),
+      text: z.string().min(1).max(12000),
+    }).strict()).min(1).max(20),
   })).min(1).max(40),
 });
 
