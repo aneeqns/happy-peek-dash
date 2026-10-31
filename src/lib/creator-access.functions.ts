@@ -17,6 +17,6 @@ export const unlockCreator = createServerFn({ method: "POST" })
 
 export const lockCreator = createServerFn({ method: "POST" }).handler(async () => {
   const { clearCreatorCookie } = await import("./creator-access.server");
-  clearCreatorCookie();
+  await clearCreatorCookie();
   return { granted: false };
 });

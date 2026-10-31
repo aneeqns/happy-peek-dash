@@ -15,7 +15,8 @@
 - [x] Fix verified security issues and run regression checks
 - [x] Publish security fixes to the public site
 - [ ] Verify signed-in Creator access — awaiting a confirmed owner account and private code
-- [ ] Deep code-level security review of account, database, AI and request boundaries
-- [ ] Fix deeper review findings and run security regression checks
+- [x] Deep code-level security review of account, database, AI and request boundaries
+- [x] Fix verified deeper review findings and run security regression checks
+- [ ] Decide whether to restrict demo AI to signed-in accounts — anonymous demo access remains intentionally available with quotas
 - [ ] Publish deeper security fixes — awaiting explicit republish request
 

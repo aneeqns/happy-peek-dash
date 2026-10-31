@@ -15,3 +15,4 @@
 - Chat accepts only bounded text history; chart tool parts remain local to prevent arbitrary downloads and forged tool-result replay.
 - Private query caches are cleared on identity transitions and scoped by user ID; alert storage separates real identities from demo data.
 - Security tables grant users only the exact privileges needed; RLS does not protect TRUNCATE.
+- Signed Creator passes also require a live service-only registry entry so locking revokes retained cookie copies.
