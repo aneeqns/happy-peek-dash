@@ -25,7 +25,7 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
     const enriched = positions.map((p) => {
       const mv = p.qty * p.price;
       const pl = (p.price - p.avg) * p.qty;
-      const plPct = ((p.price - p.avg) / p.avg) * 100;
+      const plPct = p.avg > 0 ? ((p.price - p.avg) / p.avg) * 100 : 0;
       return { ...p, mv, pl, plPct, sector: p.sector ?? SECTOR_MAP[p.symbol] ?? "Other" };
     });
     const total = enriched.reduce((s, p) => s + p.mv, 0);
@@ -36,28 +36,23 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
     const bySector = new Map<string, number>();
     enriched.forEach((p) => bySector.set(p.sector, (bySector.get(p.sector) ?? 0) + p.mv));
     const allocation = [...bySector.entries()]
-      .map(([name, mv]) => ({ name, mv, pct: (mv / total) * 100 }))
+      .map(([name, mv]) => ({ name, mv, pct: total > 0 ? (mv / total) * 100 : 0 }))
       .sort((a, b) => b.mv - a.mv);
 
     // Concentration: Herfindahl-like on positions
-    const weights = enriched.map((p) => p.mv / total);
+    const weights = enriched.map((p) => total > 0 ? p.mv / total : 0);
     const hhi = weights.reduce((s, w) => s + w * w, 0);
-    const diversification = Math.round((1 - hhi) * 100); // 0-100
+    const diversification = total > 0 ? Math.round((1 - hhi) * 100) : 0;
 
     const top = [...enriched].sort((a, b) => b.plPct - a.plPct)[0];
     const worst = [...enriched].sort((a, b) => a.plPct - b.plPct)[0];
     const topWeight = weights.length ? Math.max(...weights) * 100 : 0;
 
-    // Mock benchmark
-    const benchYtd = 12.4;
-    const portYtd = totalPLPct;
-    const alpha = portYtd - benchYtd;
-
     // Risk score 0-100 (higher = riskier). Rough blend of concentration + tech weight
     const techPct = allocation.find((a) => a.name === "Tech")?.pct ?? 0;
     const risk = Math.min(100, Math.round(hhi * 100 + techPct * 0.4));
 
-    return { enriched, total, totalPL, totalPLPct, allocation, diversification, top, worst, topWeight, alpha, portYtd, benchYtd, risk };
+    return { enriched, total, totalPL, totalPLPct, allocation, diversification, top, worst, topWeight, risk };
   }, [positions]);
 
   return (
@@ -68,7 +63,7 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
             <Activity className="h-4 w-4 text-accent" />
             <h2 className="text-lg font-semibold">Portfolio insights</h2>
           </div>
-          <p className="text-xs text-muted-foreground">Diversification, risk & benchmark analytics on your open positions.</p>
+          <p className="text-xs text-muted-foreground">Allocation and cost-basis returns on your open positions.</p>
         </div>
         <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
           Premium preview
@@ -111,7 +106,7 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
                 {stats.topWeight.toFixed(1)}% of portfolio
               </p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                {stats.topWeight > 30 ? "High concentration — consider trimming." : "Concentration looks healthy."}
+                {stats.total === 0 ? "No positions to assess yet." : stats.topWeight > 30 ? "High concentration — consider trimming." : "Concentration looks healthy."}
               </p>
             </div>
           </div>
@@ -120,12 +115,10 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
         {/* Benchmark + movers */}
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <TrendingUp className="h-4 w-4 text-muted-foreground" /> vs S&amp;P 500 (YTD)
+            <TrendingUp className="h-4 w-4 text-muted-foreground" /> Return since purchase
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-            <Stat label="Portfolio" value={`${stats.portYtd >= 0 ? "+" : ""}${stats.portYtd.toFixed(2)}%`} tone={stats.portYtd >= 0 ? "bull" : "bear"} />
-            <Stat label="S&P 500" value={`+${stats.benchYtd.toFixed(2)}%`} tone="muted" />
-            <Stat label="Alpha" value={`${stats.alpha >= 0 ? "+" : ""}${stats.alpha.toFixed(2)}%`} tone={stats.alpha >= 0 ? "bull" : "bear"} />
+          <div className="mt-4 text-center">
+            <Stat label="Cost-basis return" value={stats.total > 0 ? `${stats.totalPLPct >= 0 ? "+" : ""}${stats.totalPLPct.toFixed(2)}%` : "—"} tone={stats.totalPLPct >= 0 ? "bull" : "bear"} />
           </div>
           <div className="mt-4 space-y-2 text-xs">
             {stats.top && (
@@ -135,7 +128,7 @@ export function PortfolioInsights({ positions }: { positions: Position[] }) {
                 </span>
                 <span className="font-mono-nums">
                   <span className="font-semibold text-foreground">{stats.top.symbol}</span>{" "}
-                  <span className="text-bull">+{stats.top.plPct.toFixed(2)}%</span>
+                  <span className={stats.top.plPct >= 0 ? "text-bull" : "text-bear"}>{stats.top.plPct >= 0 ? "+" : ""}{stats.top.plPct.toFixed(2)}%</span>
                 </span>
               </div>
             )}

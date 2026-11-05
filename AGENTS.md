@@ -16,3 +16,5 @@
 - Private query caches are cleared on identity transitions and scoped by user ID; alert storage separates real identities from demo data.
 - Security tables grant users only the exact privileges needed; RLS does not protect TRUNCATE.
 - Signed Creator passes also require a live service-only registry entry so locking revokes retained cookie copies.
+- Live quote reads use public chart metadata with bounded concurrency and per-symbol failure isolation; missing quotes must not display synthetic market prices.
+- Demo wallet limits are enforced in the wallet module; daily portfolio changes use previous-close arithmetic rather than current-value percentages.

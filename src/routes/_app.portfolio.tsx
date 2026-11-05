@@ -8,7 +8,8 @@ import { GlassCard, Kpi, PageHeader, Pill, ProgressBar, SectionTitle } from "@/c
 import { useAuth } from "@/lib/auth";
 import { addHolding, deleteHolding, listHoldings } from "@/lib/holdings.functions";
 import { fmt, goals } from "@/lib/market-data";
-import { buyDemo, createDemoWallet, sellDemo, useDemoWallet, DEMO_AMOUNT_PRESETS } from "@/lib/demo-wallet";
+import { buyDemo, createDemoWallet, sellDemo, useDemoWallet, DEMO_AMOUNT_PRESETS, isDemoAmount, DEMO_MIN, DEMO_MAX } from "@/lib/demo-wallet";
+import { positionDayChange } from '@/lib/portfolio-math';
 import { getQuotes } from "@/lib/quotes.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
@@ -56,7 +57,7 @@ function PortfolioPage() {
   const invested = priced.reduce((s, p) => s + p.quantity * p.price, 0);
   const cost = priced.reduce((s, p) => s + p.quantity * p.avg, 0);
   const pl = invested - cost;
-  const dayChange = priced.reduce((s, p) => s + (p.quantity * p.price * p.changePct) / 100, 0);
+  const dayChange = priced.reduce((s, p) => s + positionDayChange(p.quantity, p.price, p.changePct), 0);
 
   return (
     <div className="space-y-8">
@@ -75,6 +76,7 @@ function PortfolioPage() {
       />
 
       {quoteError && <p className="text-xs text-amber-300">{quoteError}</p>}
+      {holdingsQuery.error && <p className="text-sm text-bear">Your holdings could not be loaded. Please refresh or sign in again.</p>}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Kpi
@@ -127,7 +129,7 @@ function PortfolioPage() {
                       {p.symbol}
                       {!p.live && <span className="ml-2 text-[10px] text-muted-foreground">no live price</span>}
                     </td>
-                    <td className="py-2 text-right font-mono-nums">{fmt(p.quantity, 0)}</td>
+                    <td className="py-2 text-right font-mono-nums">{p.quantity.toLocaleString(undefined, { maximumFractionDigits: 8 })}</td>
                     <td className="py-2 text-right font-mono-nums">{fmt(p.avg)}</td>
                     <td className="py-2 text-right font-mono-nums">{fmt(p.price)}</td>
                     <td className="py-2 text-right font-mono-nums">${fmt(value, 0)}</td>
@@ -302,6 +304,16 @@ function DemoTradeCard() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [custom, setCustom] = useState("");
 
+  const changeAmount = (value: string) => {
+    const amount = Number(value);
+    if (!isDemoAmount(amount)) {
+      setMsg({ ok: false, text: `Choose a virtual amount between $${DEMO_MIN.toLocaleString()} and $${DEMO_MAX.toLocaleString()}.` });
+      return;
+    }
+    createDemoWallet(amount);
+    setMsg(null);
+  };
+
   if (!wallet) {
     return (
       <GlassCard className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/5" glow="violet">
@@ -313,8 +325,9 @@ function DemoTradeCard() {
             </button>
           ))}
           <input value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))} placeholder="Custom amount" className="w-36 rounded-xl border border-border bg-surface px-3 py-1.5 text-sm" />
-          <button onClick={() => Number(custom) >= 100 && createDemoWallet(Number(custom))} className="rounded-xl bg-primary px-3 py-1.5 text-sm text-primary-foreground">Start</button>
+          <button onClick={() => changeAmount(custom)} className="rounded-xl bg-primary px-3 py-1.5 text-sm text-primary-foreground">Start</button>
         </div>
+        {msg && <p className="mt-2 text-xs text-bear">{msg.text}</p>}
       </GlassCard>
     );
   }
@@ -323,12 +336,12 @@ function DemoTradeCard() {
     setMsg(null);
     const sym = symbol.trim().toUpperCase();
     const qty = Number(quantity);
-    if (!sym || !(qty > 0)) return setMsg({ ok: false, text: "Enter a symbol and quantity." });
+    if (!sym || !Number.isFinite(qty) || !(qty > 0)) return setMsg({ ok: false, text: "Enter a symbol and quantity." });
     setBusy(true);
     try {
       const res = await fetchQuotes({ data: { symbols: [sym] } });
       const q = res.quotes.find((x) => x.symbol === sym);
-      if (!q) return setMsg({ ok: false, text: `No live price found for ${sym}.` });
+      if (!q) return setMsg({ ok: false, text: res.error ?? `No live price found for ${sym}.` });
       const err = side === "buy" ? buyDemo(sym, qty, q.price) : sellDemo(sym, qty, q.price);
       setMsg(err ? { ok: false, text: err } : { ok: true, text: `${side === "buy" ? "Bought" : "Sold"} ${qty} ${sym} at $${fmt(q.price)} (live price).` });
       if (!err) setQuantity("");
@@ -346,7 +359,7 @@ function DemoTradeCard() {
           <button
             onClick={() => {
               const v = window.prompt("New pretend starting amount (this clears your demo positions):", String(wallet.startingCash));
-              if (v && Number(v) >= 100) createDemoWallet(Number(v));
+              if (v !== null) changeAmount(v);
             }}
             className="text-[10px] uppercase tracking-wider text-violet-300"
           >
