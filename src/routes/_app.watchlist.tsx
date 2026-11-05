@@ -24,7 +24,7 @@ function WatchlistPage() {
   const { quotes, error, updatedAt } = useQuotes(initialWatchlist.map((t) => t.symbol));
   const rows = initialWatchlist.map((t) => {
     const q = quotes.get(t.symbol);
-    return q ? { ...t, price: q.price, change: q.change, changePct: q.changePct } : t;
+    return q ? { ...t, price: q.price, change: q.change, changePct: q.changePct, live: true } : { ...t, live: false };
   });
 
   return (
@@ -41,17 +41,14 @@ function WatchlistPage() {
                 <p className="font-mono-nums text-sm font-semibold">{t.symbol}</p>
                 <p className="truncate text-[11px] text-muted-foreground">{t.name}</p>
               </div>
-              <Sparkline data={t.spark} />
             </div>
             <div className="mt-3">
               <ShariahBadge status={statusOf(t.symbol)} />
             </div>
             <div className="mt-3 flex items-end justify-between">
-              <p className="font-mono-nums text-lg">{fmt(t.price)}</p>
+              <p className="font-mono-nums text-lg">{t.live ? fmt(t.price) : "—"}</p>
               <p className={cn("font-mono-nums text-sm", t.changePct >= 0 ? "text-bull" : "text-bear")}>
-                {t.changePct >= 0 ? "+" : ""}
-                {t.changePct.toFixed(2)}% ({t.change >= 0 ? "+" : ""}
-                {fmt(t.change)})
+                {t.live ? `${t.changePct >= 0 ? "+" : ""}${t.changePct.toFixed(2)}% (${t.change >= 0 ? "+" : ""}${fmt(t.change)})` : "Price unavailable"}
               </p>
             </div>
           </GlassCard>

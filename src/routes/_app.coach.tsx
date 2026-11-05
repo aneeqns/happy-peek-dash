@@ -4,7 +4,11 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { GlassCard, PageHeader, Pill, ProgressBar, SectionTitle } from "@/components/ui-kit";
 import { useAuth } from "@/lib/auth";
-import { positions } from "@/lib/market-data";
+import { useQuery } from '@tanstack/react-query';
+import { useServerFn } from '@tanstack/react-start';
+import { listHoldings } from '@/lib/holdings.functions';
+import { useDemoWallet } from '@/lib/demo-wallet';
+import { useQuotes } from '@/lib/useQuotes';
 
 export const Route = createFileRoute("/_app/coach")({
   head: () => ({
@@ -33,12 +37,18 @@ const SECTOR_OF: Record<string, string> = {
 };
 
 function useExposure() {
-  const rows = positions.map((p) => ({ ...p, value: p.qty * p.price, sector: SECTOR_OF[p.symbol] ?? "Other" }));
+  const { mode, user } = useAuth();
+  const wallet = useDemoWallet();
+  const fetchHoldings = useServerFn(listHoldings);
+  const holdings = useQuery({ queryKey: ['holdings', user?.id], queryFn: () => fetchHoldings(), enabled: mode === 'real' && Boolean(user?.id) });
+  const positions = mode === 'real' ? (holdings.data ?? []).map(h => ({ symbol: h.symbol, qty: h.quantity, avg: h.avg_cost })) : (wallet?.holdings ?? []).map(h => ({ symbol: h.symbol, qty: h.quantity, avg: h.avgCost }));
+  const { quotes } = useQuotes(positions.map(p => p.symbol));
+  const rows = positions.map((p) => ({ ...p, value: p.qty * (quotes.get(p.symbol)?.price ?? p.avg), sector: SECTOR_OF[p.symbol] ?? "Other" }));
   const total = rows.reduce((s, r) => s + r.value, 0);
   const bySector = new Map<string, number>();
   for (const r of rows) bySector.set(r.sector, (bySector.get(r.sector) ?? 0) + r.value);
   const sectors = [...bySector.entries()]
-    .map(([sector, value]) => ({ sector, pct: (value / total) * 100 }))
+    .map(([sector, value]) => ({ sector, pct: total > 0 ? (value / total) * 100 : 0 }))
     .sort((a, b) => b.pct - a.pct);
   return { rows, total, sectors };
 }
@@ -64,11 +74,11 @@ function CoachPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const active = MODES.find((m) => m.id === mode)!;
+  const active = MODES.find((m) => m.id === mode) ?? MODES[0];
 
   const context = [
     `Total portfolio value: $${total.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-    `Holdings: ${rows.map((r) => `${r.symbol} ${((r.value / total) * 100).toFixed(1)}%`).join(", ")}`,
+    `Holdings: ${rows.length ? rows.map((r) => `${r.symbol} ${(total > 0 ? (r.value / total) * 100 : 0).toFixed(1)}%`).join(", ") : 'No holdings yet'}`,
     `Sector mix: ${sectors.map((s) => `${s.sector} ${s.pct.toFixed(1)}%`).join(", ")}`,
     user ? `Investor: ${user.name} (${user.plan} plan)` : "",
   ]
@@ -118,6 +128,7 @@ function CoachPage() {
         <SectionTitle icon={<AlertTriangle className="h-4 w-4 text-warn" />} right={<Pill tone={top && top.pct > 50 ? "warn" : "bull"}>{top ? `${top.sector} ${top.pct.toFixed(0)}%` : "—"}</Pill>}>
           Concentration snapshot
         </SectionTitle>
+        {rows.length === 0 && <p className="mt-3 text-sm text-muted-foreground">No holdings yet.</p>}
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {sectors.map((s) => (
             <div key={s.sector}>

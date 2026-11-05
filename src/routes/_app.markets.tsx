@@ -142,10 +142,9 @@ function MarketsPage() {
                   <td className="py-2">
                     <ShariahBadge status={statusOf(m.symbol)} />
                   </td>
-                  <td className="py-2 text-right font-mono-nums">{fmt(m.price)}</td>
+                  <td className="py-2 text-right font-mono-nums">{m.live ? fmt(m.price) : "—"}</td>
                   <td className={cn("py-2 text-right font-mono-nums", m.pct >= 0 ? "text-bull" : "text-bear")}>
-                    {m.pct >= 0 ? "+" : ""}
-                    {m.pct.toFixed(2)}%
+                    {m.live ? `${m.pct >= 0 ? "+" : ""}${m.pct.toFixed(2)}%` : "—"}
                   </td>
                 </tr>
               ))}
