@@ -6,4 +6,4 @@ Investors grow their wealth through stock investments they understand and trust.
 
 ## Metric
 
-Investments made in Uptrend portfolios (demo buys filled at live prices and real holdings saved) each week
+Investments made in Uptrend portfolios (demo buys filled at live prices and real holdings saved) each day
