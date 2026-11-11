@@ -13,6 +13,8 @@ import { positionDayChange } from '@/lib/portfolio-math';
 import { getQuotes } from "@/lib/quotes.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/utils";
+import { recordDemoInvestment } from '@/lib/investment-history.functions';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute("/_app/portfolio")({
   head: () => ({
@@ -298,6 +300,8 @@ function AddHoldingCard() {
 function DemoTradeCard() {
   const wallet = useDemoWallet();
   const fetchQuotes = useServerFn(getQuotes);
+  const recordInvestment = useServerFn(recordDemoInvestment);
+  const [pendingHistory, setPendingHistory] = useState<{ id: string; symbol: string; quantity: number } | null>(null);
   const [symbol, setSymbol] = useState("");
   const [quantity, setQuantity] = useState("");
   const [busy, setBusy] = useState(false);
@@ -342,9 +346,20 @@ function DemoTradeCard() {
       const res = await fetchQuotes({ data: { symbols: [sym] } });
       const q = res.quotes.find((x) => x.symbol === sym);
       if (!q) return setMsg({ ok: false, text: res.error ?? `No live price found for ${sym}.` });
+      if (side === 'buy' && q.currency !== 'USD') return setMsg({ ok: false, text: 'Demo buys currently require a USD market price.' });
       const err = side === "buy" ? buyDemo(sym, qty, q.price) : sellDemo(sym, qty, q.price);
       setMsg(err ? { ok: false, text: err } : { ok: true, text: `${side === "buy" ? "Bought" : "Sold"} ${qty} ${sym} at $${fmt(q.price)} (live price).` });
       if (!err) setQuantity("");
+      if (!err && side === 'buy') {
+        const event = { id: crypto.randomUUID(), symbol: sym, quantity: qty };
+        setPendingHistory(event);
+        try {
+          await recordInvestment({ data: event });
+          setPendingHistory(null);
+        } catch {
+          setMsg({ ok: true, text: `Bought ${qty} ${sym}. The buy succeeded, but its daily history is not saved yet.` });
+        }
+      }
     } catch {
       setMsg({ ok: false, text: "Live prices are unavailable right now. Try again." });
     } finally {
@@ -372,10 +387,16 @@ function DemoTradeCard() {
       <div className="flex flex-wrap items-center gap-2">
         <input value={symbol} onChange={(e) => setSymbol(e.target.value.toUpperCase())} placeholder="Symbol (e.g. AAPL)" className="min-w-36 flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary/60" />
         <input value={quantity} onChange={(e) => setQuantity(e.target.value)} inputMode="decimal" placeholder="Quantity" className="min-w-28 flex-1 rounded-xl border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary/60" />
-        <button disabled={busy} onClick={() => void trade("buy")} className="rounded-xl bg-bull px-4 py-2 text-sm font-medium text-background disabled:opacity-50">Buy</button>
+        <button disabled={busy || Boolean(pendingHistory)} onClick={() => void trade("buy")} className="rounded-xl bg-bull px-4 py-2 text-sm font-medium text-background disabled:opacity-50">Buy</button>
         <button disabled={busy} onClick={() => void trade("sell")} className="rounded-xl bg-bear px-4 py-2 text-sm font-medium text-background disabled:opacity-50">Sell</button>
       </div>
       {msg && <p className={cn("mt-2 text-xs", msg.ok ? "text-bull" : "text-bear")}>{msg.text}</p>}
+      {pendingHistory && <Button variant="outline" size="sm" disabled={busy} className="mt-2" onClick={async () => {
+        setBusy(true);
+        try { await recordInvestment({ data: pendingHistory }); setPendingHistory(null); setMsg({ ok: true, text: 'Daily investment history saved.' }); }
+        catch { setMsg({ ok: false, text: 'History could not be saved. Please retry; your buy is already complete.' }); }
+        finally { setBusy(false); }
+      }}>Retry saving history</Button>}
       <p className="mt-2 text-[11px] text-muted-foreground">
         Orders fill at the real live market price. The money is pretend — available: ${fmt(wallet.cash)}.
       </p>

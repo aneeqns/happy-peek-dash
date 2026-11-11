@@ -18,6 +18,7 @@ import { getCreatorStats } from "@/lib/creator-stats.functions";
 import { useQuotes } from "@/lib/useQuotes";
 import { fmt, fmtCompact } from "@/lib/market-data";
 import { useAuth } from '@/lib/auth';
+import { DailyInvestmentHistory } from '@/components/DailyInvestmentHistory';
 
 export const Route = createFileRoute("/_app/creator/")({
   head: () => ({
@@ -96,6 +97,8 @@ function CreatorHome() {
           tint="amber"
         />
       </div>
+
+      <DailyInvestmentHistory />
 
       <GlassCard className="bg-gradient-to-br from-sky-500/15 to-violet-500/5" glow="sky">
         <SectionTitle>Sign-ups — last 14 days</SectionTitle>

@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Save daily investment counts (demo buys and real holdings) and add Creator history with verification
+
 - [ ] Correct current app errors and verify the main customer flows
 
 - [x] Start screen with two choices: create a real account, or use a demo account

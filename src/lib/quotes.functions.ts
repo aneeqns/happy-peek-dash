@@ -53,7 +53,7 @@ function appSymbol(provider: string) {
   return found ? found[0] : provider;
 }
 
-async function fetchChunk(symbols: string[]): Promise<Quote[]> {
+export async function fetchLiveQuotes(symbols: string[]): Promise<Quote[]> {
   const quotes: Quote[] = [];
   // The old batch endpoint requires provider authentication. The public chart
   // endpoint supplies quote metadata without cookies or private credentials.
@@ -100,7 +100,7 @@ export const getQuotes = createServerFn({ method: "POST" })
     if (data.symbols.length === 0) return { quotes: [] as Quote[], error: null as string | null, at: Date.now() };
     const mapped = [...new Set(data.symbols.map(providerSymbol))];
     try {
-      const quotes = await fetchChunk(mapped);
+      const quotes = await fetchLiveQuotes(mapped);
       return { quotes, error: quotes.length < mapped.length ? 'Live prices are unavailable for some symbols.' : null as string | null, at: Date.now() };
     } catch (err) {
       console.error("[quotes] provider failed", err);

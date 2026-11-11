@@ -18,3 +18,4 @@
 - Signed Creator passes also require a live service-only registry entry so locking revokes retained cookie copies.
 - Live quote reads use public chart metadata with bounded concurrency and per-symbol failure isolation; missing quotes must not display synthetic market prices.
 - Demo wallet limits are enforced in the wallet module; daily portfolio changes use previous-close arithmetic rather than current-value percentages.
+- Investment activity uses idempotent events and atomic UTC-day aggregates; real holding inserts are counted by a database trigger, anonymous demo buys are quota-limited and live-quote-validated, and history reads require the verified Creator role and revocable pass so counts persist without exposing customer data.

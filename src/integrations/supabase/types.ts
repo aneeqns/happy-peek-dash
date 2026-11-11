@@ -65,6 +65,27 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_investment_snapshots: {
+        Row: {
+          day: string
+          demo_buys: number
+          real_holdings: number
+          updated_at: string
+        }
+        Insert: {
+          day: string
+          demo_buys?: number
+          real_holdings?: number
+          updated_at?: string
+        }
+        Update: {
+          day?: string
+          demo_buys?: number
+          real_holdings?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       holdings: {
         Row: {
           avg_cost: number
@@ -95,6 +116,27 @@ export type Database = {
           symbol?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      investment_events: {
+        Row: {
+          id: string
+          recorded_at: string
+          source: string
+          source_key: string
+        }
+        Insert: {
+          id?: string
+          recorded_at?: string
+          source: string
+          source_key: string
+        }
+        Update: {
+          id?: string
+          recorded_at?: string
+          source?: string
+          source_key?: string
         }
         Relationships: []
       }

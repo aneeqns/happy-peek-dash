@@ -29,6 +29,13 @@
       "when": 1793469503746,
       "tag": "0003_revocable_creator_passes",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794378432343,
+      "tag": "0004_daily_investment_snapshots",
+      "breakpoints": true
     }
   ]
 }
