@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Save daily investment counts (demo buys and real holdings) and add Creator history with verification
+- [x] Save daily investment counts (demo buys and real holdings) and add Creator history; demo buy persisted and daily count verified, 12 tests passed
+- [ ] Verify daily history inside the signed-in Creator dashboard — awaiting a confirmed owner account and private code
 
 - [ ] Correct current app errors and verify the main customer flows
 
