@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { Button } from '@/components/ui/button';
 import { ChartTooltip, Kpi, SectionTitle } from '@/components/ui-kit';
 import { useAuth } from '@/lib/auth';
+import { downloadCsv } from '@/lib/csv-export';
 import { getInvestmentHistory } from '@/lib/investment-history.functions';
 
 export function DailyInvestmentHistory() {
@@ -29,6 +30,18 @@ export function DailyInvestmentHistory() {
       <label className="flex items-center gap-2 text-sm text-muted-foreground">Ending
         <input type="date" aria-label="History ending date" value={end} max={new Date().toISOString().slice(0, 10)} onChange={event => { if (event.target.value) setEnd(event.target.value); }} className="rounded-md border border-input bg-background px-2 py-1 text-foreground" />
       </label>
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={rows.length === 0}
+        onClick={() => downloadCsv(
+          `uptrend-investments-${start}-to-${end}.csv`,
+          ['Day (UTC)', 'Real holdings saved', 'Demo buys', 'Total'],
+          rows.map(row => [row.day, row.real, row.demo, row.total]),
+        )}
+      >
+        Export CSV
+      </Button>
     </div>
     <p className="text-xs text-muted-foreground">UTC days · Investment counts, not money · Today’s total is still growing</p>
     {history.isPending ? <p className="text-sm text-muted-foreground">Loading daily investments…</p> : history.error ? <div className="flex flex-wrap items-center gap-3"><p className="text-sm text-bear">Daily investments could not be loaded.</p><Button variant="outline" size="sm" onClick={() => void history.refetch()}>Retry</Button></div> : <>
