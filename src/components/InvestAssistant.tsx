@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { ChatChart } from "@/components/ChatChart";
 import type { ChartPayload } from "@/lib/chart-tool";
+import { authHeaders } from "@/lib/ai-auth";
 import upbotCharacter from "@/assets/upbot-character.png.asset.json";
 
 const STARTERS = [
@@ -23,7 +24,8 @@ export function InvestAssistant() {
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
-      prepareSendMessagesRequest: ({ messages }) => ({
+      prepareSendMessagesRequest: async ({ messages }) => ({
+        headers: await authHeaders(),
         body: {
           messages: messages.map((message) => ({
             id: message.id,
@@ -32,7 +34,7 @@ export function InvestAssistant() {
             parts: message.parts.filter((part) => part.type === 'text')
               .map((part) => ({ type: 'text', text: part.text }))
               .filter((part) => part.text.length > 0),
-          })).filter((message) => message.parts.length > 0),
+          })).filter((message) => message.role === 'user' && message.parts.length > 0),
         },
       }),
     }),

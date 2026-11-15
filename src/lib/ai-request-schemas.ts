@@ -9,7 +9,7 @@ export const coachRequestSchema = z.object({
 export const chatRequestSchema = z.object({
   messages: z.array(z.object({
     id: z.string().max(200),
-    role: z.enum(['user', 'assistant']),
+    role: z.literal('user'),
     parts: z.array(z.object({
       type: z.literal('text'),
       text: z.string().min(1).max(12000),

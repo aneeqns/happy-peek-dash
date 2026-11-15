@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { authHeaders } from "@/lib/ai-auth";
 import { AlertTriangle, BookOpen, GraduationCap, Lightbulb, Sparkles, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -94,13 +95,15 @@ function CoachPage() {
     try {
       const res = await fetch("/api/coach", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(await authHeaders()) },
         body: JSON.stringify({ mode, question: text, context }),
       });
       const data = (await res.json().catch(() => ({}))) as { text?: string; error?: string };
       if (!res.ok) {
         setError(
-          res.status === 429
+          res.status === 401
+            ? "Sign in with a real account to use the AI coach."
+            : res.status === 429
             ? "The coach is rate-limited right now — try again in a moment."
             : res.status === 402
               ? "AI credits are exhausted for this workspace."

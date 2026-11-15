@@ -25,6 +25,8 @@ export const Route = createFileRoute("/api/coach")({
     handlers: {
       POST: async ({ request }) => {
         const { enforcePublicQuota, readLimitedJson, verifiedRequestUser } = await import('@/lib/request-security.server');
+        const { verifiedRequestUser: requireUser } = await import('@/lib/request-security.server');
+        if (!(await requireUser())) return Response.json({ error: 'Sign in to use the AI coach.' }, { status: 401 });
         try {
           const denied = await enforcePublicQuota('ai', request);
           if (denied) return denied;

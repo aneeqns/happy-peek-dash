@@ -26,6 +26,8 @@ export const Route = createFileRoute("/api/chat")({
     handlers: {
       POST: async ({ request }) => {
         const { enforcePublicQuota, readLimitedJson } = await import('@/lib/request-security.server');
+        const { verifiedRequestUser: requireUser } = await import('@/lib/request-security.server');
+        if (!(await requireUser())) return new Response('Sign in to use the AI assistant.', { status: 401 });
         try {
           const denied = await enforcePublicQuota('ai', request);
           if (denied) return denied;
